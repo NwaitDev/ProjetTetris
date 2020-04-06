@@ -37,6 +37,7 @@ var upKeyDown = false;
 var leftKeyDown = false;
 var rightKeyDown = false;
 
+
 /**
  * Constructeur du type Block
  * @param {abscisse} x 
@@ -45,6 +46,14 @@ var rightKeyDown = false;
 var Block = function(x,y){
     this.x = x;
     this.y = y;
+    var self = this;
+    /**
+     * décalage d'un bloc selon x et y
+     */
+    this.move = function(xShift,yShift){
+        self.x+=xShift;
+        self.y+=yShift;
+    }
 }
 /**
  * Constructeur du type Tetromino
@@ -60,6 +69,24 @@ var Tetromino = function Tetromino(block1,block2,block3,block4,color){
     this.block3 = block3;
     this.block4 = block4;
     this.color = color;
+    var self = this;
+    /**
+     * Vérification de la position du tetromino
+     */
+    this.check = function(){
+        let res = (grid[self.block1.x]!==undefined)&&
+        (grid[self.block2.x]!==undefined)&&
+        (grid[self.block3.x]!==undefined)&&
+        (grid[self.block4.x]!==undefined);
+        if (res){
+            res = (grid[self.block1.x][self.block1.y]==0)&&
+            (grid[self.block2.x][self.block2.y]==0)&&
+            (grid[self.block3.x][self.block3.y]==0)&&
+            (grid[self.block4.x][self.block4.y]==0);
+        }
+        return res;
+    }
+    
 }
 
 
@@ -127,6 +154,83 @@ color = function color(color){
         case 7 :
             return "#FFF";
     }
+}
+
+/**
+ * Fonction de mise à jour de l'état du jeu
+ * @param {Date} d 
+ */
+update = function update(d) {
+    if(d-lastTimeUpdate > 700 || (downKeyDown && d-lastTimeUpdate > 100)){
+        fall();
+        if(!tetromino.check()){
+            upShift();
+            printInGrid();
+            spawnTetromino();
+        }
+        lastTimeUpdate = d;
+    }
+    if(rightKeyDown && d-lastMoveTime > 100){
+        rightShift();
+        if(!tetromino.check()){
+            leftShift();
+        }
+        lastMoveTime = d;
+    }
+    if(leftKeyDown && d-lastMoveTime > 100){
+        leftShift();
+        if(!tetromino.check()){
+            rightShift();
+        }
+        lastMoveTime = d;
+    }
+}
+
+/*
+ * Fonctions de déplacement du tetromino
+ */
+
+////////////////////////////
+fall = function(){
+    tetromino.block1.y+=1;
+    tetromino.block2.y+=1;
+    tetromino.block3.y+=1;
+    tetromino.block4.y+=1;
+}
+
+leftShift = function(){
+    tetromino.block1.x-=1;
+    tetromino.block2.x-=1;
+    tetromino.block3.x-=1;
+    tetromino.block4.x-=1;
+}
+
+rightShift = function(){
+    tetromino.block1.x+=1;
+    tetromino.block2.x+=1;
+    tetromino.block3.x+=1;
+    tetromino.block4.x+=1;
+}
+
+upShift = function(){
+    tetromino.block1.y-=1;
+    tetromino.block2.y-=1;
+    tetromino.block3.y-=1;
+    tetromino.block4.y-=1;
+}
+
+
+
+/////////////////////////////
+
+/**
+ * enregistre dans la grille la position du tetromino
+ */
+printInGrid = function printInGrid(){
+    grid[tetromino.block1.x][tetromino.block1.y] = tetromino.color;
+    grid[tetromino.block2.x][tetromino.block2.y] = tetromino.color;
+    grid[tetromino.block3.x][tetromino.block3.y] = tetromino.color;
+    grid[tetromino.block4.x][tetromino.block4.y] = tetromino.color;
 }
 
 /**
@@ -198,99 +302,6 @@ spawnTetromino = function spawnTetromino(){
             );
     }
     nextColor = Math.ceil(Math.random()*7);
-}
-
-
-
-/**
- * Fonction de mise à jour de l'état du jeu
- * @param {Date} d 
- */
-update = function update(d) {
-    if(d-lastTimeUpdate > 700 || (downKeyDown && d-lastTimeUpdate > 100)){
-        fall();
-        if(!check()){
-            upShift();
-            printInGrid();
-            spawnTetromino();
-        }
-        lastTimeUpdate = d;
-    }
-    if(rightKeyDown && d-lastMoveTime > 100){
-        rightShift();
-        if(!check()){
-            leftShift();
-        }
-        lastMoveTime = d;
-    }
-    if(leftKeyDown && d-lastMoveTime > 100){
-        leftShift();
-        if(!check()){
-            rightShift();
-        }
-        lastMoveTime = d;
-    }
-}
-
-/**
- * Fonctions de déplacement du tetromino
- */
-
-////////////////////////////
-fall = function fall(){
-    tetromino.block1.y+=1;
-    tetromino.block2.y+=1;
-    tetromino.block3.y+=1;
-    tetromino.block4.y+=1;
-}
-
-leftShift = function leftShift(){
-    tetromino.block1.x-=1;
-    tetromino.block2.x-=1;
-    tetromino.block3.x-=1;
-    tetromino.block4.x-=1;
-}
-
-rightShift = function rightShift(){
-    tetromino.block1.x+=1;
-    tetromino.block2.x+=1;
-    tetromino.block3.x+=1;
-    tetromino.block4.x+=1;
-}
-
-upShift = function upShift(){
-    tetromino.block1.y-=1;
-    tetromino.block2.y-=1;
-    tetromino.block3.y-=1;
-    tetromino.block4.y-=1;
-}
-/////////////////////////////
-
-/**
- * enregistre dans la grille la position du tetromino
- */
-printInGrid= function printInGrid(){
-    grid[tetromino.block1.x][tetromino.block1.y] = tetromino.color;
-    grid[tetromino.block2.x][tetromino.block2.y] = tetromino.color;
-    grid[tetromino.block3.x][tetromino.block3.y] = tetromino.color;
-    grid[tetromino.block4.x][tetromino.block4.y] = tetromino.color;
-}
-
-/**
- * Vérification de la position du tetromino en cours de placement 
- */
-check = function check(){
-    let res = (grid[tetromino.block1.x]!==undefined)&&
-    (grid[tetromino.block2.x]!==undefined)&&
-    (grid[tetromino.block3.x]!==undefined)&&
-    (grid[tetromino.block4.x]!==undefined);
-    if (res){
-        res = (grid[tetromino.block1.x][tetromino.block1.y]==0)&&
-        (grid[tetromino.block2.x][tetromino.block2.y]==0)&&
-        (grid[tetromino.block3.x][tetromino.block3.y]==0)&&
-        (grid[tetromino.block4.x][tetromino.block4.y]==0);
-    }
-    return res;
 }
 
 appuiClavier = function appuiClavier(event){
