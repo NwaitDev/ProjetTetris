@@ -473,7 +473,6 @@ rotate = function (tetromino) {
             break;
             
         case 6:
-            //OK
             switch (res.nbRot) {
                 case 0:
                     res.block2.move(-1, 1);
@@ -502,7 +501,6 @@ rotate = function (tetromino) {
             break;
             
         case 7:
-            //OK
             switch (res.nbRot) {
                 case 0:
                     res.block2.move(-1, 1);
