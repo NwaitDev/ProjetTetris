@@ -1,3 +1,7 @@
+
+//Reste à faire la descente des lignes (action updateLines du rapport)
+//Je vais m'en occuper
+
 /**
  * Fonction vérifiant si une ligne de la grille est complétée
  * @param {tetromino qui s'est fixé sur la grille} tetromino
