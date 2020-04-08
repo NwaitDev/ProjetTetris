@@ -69,6 +69,18 @@ isCompleted = function isCompleted(tetromino, grid){
 }
 
 /**
+ * Action de descente des lignes de la grille de jeu après la suppression d'une lignes
+ * @param {ligne supprimée} y
+ * @param {grille de jeu} grid
+ */
+ lineFall = function lineFall (y, grid){
+    for (var i = 0; i < 9; i++){
+        grid [y][i] = grid [y-1][i];
+        grid [y-1][i] = 0;
+    }
+ }
+
+/**
  * Action de suppression des lignes complétées
  * @param {indices des lignes à supprimer} lines
  * @param {grille de jeu} grid
@@ -77,6 +89,9 @@ deleteLines = function deleteLines(lines, grid){
     for (var i=0; i<lines.length; i++){
         for (var j=0; j<9; j++){
             grid[j][lines[i]] = 0;
+        }
+        for (var k= i; k<1; k++){
+            lineFall(j,grid);
         }
     }
 }
