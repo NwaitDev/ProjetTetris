@@ -25,6 +25,8 @@ var tileWidth;
 //Hauteur d'une case de la grille :
 var tileHeight; 
 
+var scoreWindowHeight = 20;
+
 //variable utilisée pour mesurer le temps écoulé entre deux récursions :
 var lastTimeUpdate = Date.now();
 
@@ -238,7 +240,7 @@ init = function() {
     document.addEventListener("keydown", appuiClavier);
     document.addEventListener("keyup", relacheClavier);
     tileWidth = context.width/10;
-    tileHeight = context.height/20;
+    tileHeight = (context.height-scoreWindowHeight)/20;
     tetromino = spawnTetromino();
     runGame();
 }
@@ -259,12 +261,36 @@ runGame = function runGame() {
  */
 printStuff = function printStuff() {
     context.clearRect(0, 0, context.width, context.height);
+    
+    //affichage de la grille
+    context.fillStyle = "#555";
+    for(let i = 1; i<10;i++){
+        context.fillRect(tileWidth*i-1,0,2,context.height);
+    }
+    for(let i = 1;i<20;i++){
+        context.fillRect(0,tileHeight*i-1,context.width,2);
+    }
+
+    //affichage du tetromino
+    context.fillStyle = "#FFF"
+    context.fillRect(tetromino.block1.x*tileWidth, tetromino.block1.y*tileHeight, tileWidth, tileHeight);
+    context.fillRect(tetromino.block2.x*tileWidth, tetromino.block2.y*tileHeight, tileWidth, tileHeight);
+    context.fillRect(tetromino.block3.x*tileWidth, tetromino.block3.y*tileHeight, tileWidth, tileHeight);
+    context.fillRect(tetromino.block4.x*tileWidth, tetromino.block4.y*tileHeight, tileWidth, tileHeight);
     context.fillStyle = color(tetromino.color);
     context.fillRect(tetromino.block1.x*tileWidth+1, tetromino.block1.y*tileHeight+1, tileWidth-2, tileHeight-2);
     context.fillRect(tetromino.block2.x*tileWidth+1, tetromino.block2.y*tileHeight+1, tileWidth-2, tileHeight-2);
     context.fillRect(tetromino.block3.x*tileWidth+1, tetromino.block3.y*tileHeight+1, tileWidth-2, tileHeight-2);
     context.fillRect(tetromino.block4.x*tileWidth+1, tetromino.block4.y*tileHeight+1, tileWidth-2, tileHeight-2);
+
+    //affichage du score
+    context.fillStyle = "#B0B";
+    context.fillRect(0,context.height-scoreWindowHeight,context.width,scoreWindowHeight);
+    context.font = "small-caps 20px Impact";
+    context.fillStyle = "#FFF";
+    context.fillText("Score :   Lines :  Level : ", 0, context.height-2);
     
+    //affichage des blocs déjà placés
     for(let i = 0 ; i<10 ; i++){
         for(let j = 0 ; j<20 ; j++){
             if(grid[i][j]!=0){
@@ -273,6 +299,7 @@ printStuff = function printStuff() {
             }
         }
     }
+    
 }
 
 /**
@@ -283,7 +310,7 @@ printStuff = function printStuff() {
 color = function color(color){
     switch (color){
         case 1 :
-            return "#FFF";
+            return "#EDE";
         case 2 :
             return "#FF0";
         case 3 :
