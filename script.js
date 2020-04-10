@@ -19,6 +19,12 @@ for (let i = 0; i<10; i++){
     }
 }
 
+//Level initial 
+var START_LEVEL = 0;
+
+//fenêtre des scores 
+var game;
+
 //Largeur d'une case de la grille :
 var tileWidth; 
 
@@ -242,7 +248,9 @@ init = function() {
     tileWidth = context.width/10;
     tileHeight = (context.height-scoreWindowHeight)/20;
     tetromino = spawnTetromino();
+    game = new game (START_LEVEL);
     runGame();
+
 }
 /**
  * Boucle de jeu
@@ -288,7 +296,7 @@ printStuff = function printStuff() {
     context.fillRect(0,context.height-scoreWindowHeight,context.width,scoreWindowHeight);
     context.font = "small-caps 20px Impact";
     context.fillStyle = "#FFF";
-    context.fillText("Score :   Lines :  Level : ", 0, context.height-2);
+    context.fillText("Score : " + game.score + " Lines : " + game.lines +" Level : " + game.level, 0, context.height-2);
     
     //affichage des blocs déjà placés
     for(let i = 0 ; i<10 ; i++){
@@ -326,6 +334,7 @@ color = function color(color){
     }
 }
 
+
 /**
  * Fonction de mise à jour de l'état du jeu
  * @param {number} d date 
@@ -333,6 +342,9 @@ color = function color(color){
 update = function update(d) {
     if(d-lastTimeUpdate > 700 || (downKeyDown && d-lastTimeUpdate > 100)){
         tetromino.fall();
+        if (downKeyDown){
+            game.score++;
+        }
         if(!tetromino.check()){
             tetromino.upShift();
             printInGrid();
@@ -374,7 +386,7 @@ printInGrid = function printInGrid(){
 
 /**
  * retourne la version tournée d'un quart de tour du tetromino en paramètre
- * @param {Tetromino} tetromino 
+ * @param {Tetromino} tetromino
  * @returns {Tetromino} la version tournée d'un quart de tour de tetromino (si possible)
  */
 rotate = function (tetromino) {
@@ -395,7 +407,7 @@ rotate = function (tetromino) {
                     res.block1.move(0, 1);
                     res.block2.move(1, 2);
                     res.block3.move(-1, 0);
-                    res.block4.move(-2, -1);
+                    res.block4.move(-2,-1);
                     res.nbRot++;
                     break;
                 case 2:
@@ -626,3 +638,47 @@ relacheClavier = function relacheClavier(event){
         break;
     }
 }
+
+/**
+ * Constructeur du type game
+ * @param {number} START_LEVEL level initial au début de la partie
+ */
+var game = function (START_LEVEL) {
+    this.level = START_LEVEL;
+    this.score = 0;
+    this.lines= 0;
+    var self = this;
+
+    /**
+     * mise à jour du score, du nombre de lignes complétées et du level
+     * @param {number []} completedLines lignes qui ont été complétées après un coup
+     */
+    this.updateGame = function (completedLines){
+        //on gère comment si le nombre de lignes est de 0?
+        switch (completedLines.length){
+            case 1 :
+                self.score += 40*(self.level+1);
+                self.lines++;
+            break;
+            case 2 :
+                self.score += 100*(self.level+1);
+                self.lines += 2;
+            break;
+            case 3 :
+                self.score += 300*(self.level+1);
+                self.lines += 3;
+            break;
+            case 4 :
+                self.score += 300*(self.level+1);
+                self.lines += 4;
+        }
+        self.level = Math.floor(self.lines/10);
+    }
+}
+
+
+
+
+
+
+
