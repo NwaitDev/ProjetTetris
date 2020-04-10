@@ -242,8 +242,6 @@ spawnTetromino = function(){
 }
 
 /**
-<<<<<<< HEAD
-=======
  * Fonction d'initialisation/lancement du jeu
  */
 init = function() {
@@ -265,7 +263,9 @@ init = function() {
 runGame = function runGame() {
     update(Date.now());
     printStuff();
-    requestAnimationFrame(runGame);
+    if(!gameOver(tetromino)){
+        requestAnimationFrame(runGame);
+    }//else affichage de la fenêtre gameOver
 }
 
 /**
@@ -318,7 +318,6 @@ printStuff = function printStuff() {
 }
 
 /**
->>>>>>> 6201cd40ee58b1aa74f8f04dc9b20c8f29bb8a37
  * retourne le code Hexadécimal de la couleur d'un tetromino
  * @param {number} color Couleur du tetromino
  * @returns {String} Couleur en héxadécimale
@@ -344,8 +343,6 @@ color = function color(color){
 
 
 /**
-<<<<<<< HEAD
-=======
  * Fonction de mise à jour de l'état du jeu
  * @param {number} d date 
  */
@@ -358,6 +355,10 @@ update = function update(d) {
         if(!tetromino.check()){
             tetromino.upShift();
             printInGrid();
+            lines = completedLines(tetromino, grid);
+            if(lines.length !=0){
+                deleteLines(lines,grid);
+            }
             tetromino = spawnTetromino();
         }
         lastTimeUpdate = d;
@@ -382,10 +383,9 @@ update = function update(d) {
     }
 }
 
-/////////////////////////////
+
 
 /**
->>>>>>> 6201cd40ee58b1aa74f8f04dc9b20c8f29bb8a37
  * enregistre dans la grille la position du tetromino
  */
 printInGrid = function printInGrid(){
@@ -715,120 +715,6 @@ deleteLines = function(lines, grid){
     }
 }
 
-
-/**
- * Fonction d'initialisation/lancement du jeu
- */
-init = function() {
-    context = document.getElementById("cvs").getContext("2d");
-    context.width = document.getElementById("cvs").width;
-    context.height = document.getElementById("cvs").height;
-    document.addEventListener("keydown", appuiClavier);
-    document.addEventListener("keyup", relacheClavier);
-    tileWidth = context.width/10;
-    tileHeight = (context.height-scoreWindowHeight)/20;
-    tetromino = spawnTetromino();
-    runGame();
-}
-/**
- * Boucle de jeu
- */
-runGame = function runGame() {
-    update(Date.now());
-    printStuff();
-    requestAnimationFrame(runGame);
-}
-
-/**
- * Affichage des éléments suivants : 
- * - grille de jeu (à finir)
- * - tetromino en cours de placement
- * - scores (à faire)
- */
-printStuff = function printStuff() {
-    context.clearRect(0, 0, context.width, context.height);
-    
-    //affichage de la grille
-    context.fillStyle = "#555";
-    for(let i = 1; i<10;i++){
-        context.fillRect(tileWidth*i-1,0,2,context.height);
-    }
-    for(let i = 1;i<20;i++){
-        context.fillRect(0,tileHeight*i-1,context.width,2);
-    }
-
-    //affichage du tetromino
-    context.fillStyle = "#FFF"
-    context.fillRect(tetromino.block1.x*tileWidth, tetromino.block1.y*tileHeight, tileWidth, tileHeight);
-    context.fillRect(tetromino.block2.x*tileWidth, tetromino.block2.y*tileHeight, tileWidth, tileHeight);
-    context.fillRect(tetromino.block3.x*tileWidth, tetromino.block3.y*tileHeight, tileWidth, tileHeight);
-    context.fillRect(tetromino.block4.x*tileWidth, tetromino.block4.y*tileHeight, tileWidth, tileHeight);
-    context.fillStyle = color(tetromino.color);
-    context.fillRect(tetromino.block1.x*tileWidth+1, tetromino.block1.y*tileHeight+1, tileWidth-2, tileHeight-2);
-    context.fillRect(tetromino.block2.x*tileWidth+1, tetromino.block2.y*tileHeight+1, tileWidth-2, tileHeight-2);
-    context.fillRect(tetromino.block3.x*tileWidth+1, tetromino.block3.y*tileHeight+1, tileWidth-2, tileHeight-2);
-    context.fillRect(tetromino.block4.x*tileWidth+1, tetromino.block4.y*tileHeight+1, tileWidth-2, tileHeight-2);
-
-    //affichage du score
-    context.fillStyle = "#000";
-    context.fillRect(0,context.height-scoreWindowHeight,context.width,scoreWindowHeight);
-    context.font = "small-caps 20px Impact";
-    context.fillStyle = "#FFF";
-    context.fillText("Score :   Lines :  Level : ", 0, context.height-2);
-    
-    //affichage des blocs déjà placés
-    for(let i = 0 ; i<10 ; i++){
-        for(let j = 0 ; j<20 ; j++){
-            if(grid[i][j]!=0){
-                context.fillStyle = color(grid[i][j]);
-                context.fillRect(i*tileWidth+1, j*tileHeight+1, tileWidth-2, tileHeight-2);
-            }
-        }
-    }
-    
-}
-
-
-
-/**
- * Fonction de mise à jour de l'état du jeu
- * @param {number} d date 
- */
-update = function update(d) {
-    if(d-lastTimeUpdate > 700 || (downKeyDown && d-lastTimeUpdate > 100)){
-        tetromino.fall();
-        if(!tetromino.check()){
-            tetromino.upShift();
-            printInGrid();
-            lines = completedLines(tetromino, grid);
-            if(lines.length !=0){
-                deleteLines(lines,grid);
-            }
-            tetromino = spawnTetromino();
-        }
-        lastTimeUpdate = d;
-    }
-    if(rightKeyDown && d-lastMoveTime > 100){
-        tetromino.rightShift();
-        if(!tetromino.check()){
-            tetromino.leftShift();
-        }
-        lastMoveTime = d;
-    }
-    if(leftKeyDown && d-lastMoveTime > 100){
-        tetromino.leftShift();
-        if(!tetromino.check()){
-            tetromino.rightShift();
-        }
-        lastMoveTime = d;
-    }
-    if(upKeyDown && d-lastMoveTime > 100){
-        tetromino = rotate(tetromino);
-        lastMoveTime = d;
-    }
-}
-
-
 appuiClavier = function appuiClavier(event){
     switch (event.keyCode){
       case 38 :
@@ -899,6 +785,14 @@ var game = function (START_LEVEL) {
     }
 }
 
+/**
+ * Fonction vérifiant la possibilité de continuer la partie
+ * @param {Tetromino} newTetromino prochain tetromino à jouer
+ * @returns {boolean} vrai si la partie est finie
+ */
+gameOver = function (newTetromino){
+    return !newTetromino.check();
+}
 
 
 
