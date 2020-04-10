@@ -19,6 +19,12 @@ for (let i = 0; i<10; i++){
     }
 }
 
+//Level initial 
+var START_LEVEL = 0;
+
+//fenêtre des scores 
+var game;
+
 //Largeur d'une case de la grille :
 var tileWidth; 
 
@@ -236,6 +242,83 @@ spawnTetromino = function(){
 }
 
 /**
+<<<<<<< HEAD
+=======
+ * Fonction d'initialisation/lancement du jeu
+ */
+init = function() {
+    context = document.getElementById("cvs").getContext("2d");
+    context.width = document.getElementById("cvs").width;
+    context.height = document.getElementById("cvs").height;
+    document.addEventListener("keydown", appuiClavier);
+    document.addEventListener("keyup", relacheClavier);
+    tileWidth = context.width/10;
+    tileHeight = (context.height-scoreWindowHeight)/20;
+    tetromino = spawnTetromino();
+    game = new game (START_LEVEL);
+    runGame();
+
+}
+/**
+ * Boucle de jeu
+ */
+runGame = function runGame() {
+    update(Date.now());
+    printStuff();
+    requestAnimationFrame(runGame);
+}
+
+/**
+ * Affichage des éléments suivants : 
+ * - grille de jeu (à finir)
+ * - tetromino en cours de placement
+ * - scores (à faire)
+ */
+printStuff = function printStuff() {
+    context.clearRect(0, 0, context.width, context.height);
+    
+    //affichage de la grille
+    context.fillStyle = "#555";
+    for(let i = 1; i<10;i++){
+        context.fillRect(tileWidth*i-1,0,2,context.height);
+    }
+    for(let i = 1;i<20;i++){
+        context.fillRect(0,tileHeight*i-1,context.width,2);
+    }
+
+    //affichage du tetromino
+    context.fillStyle = "#FFF"
+    context.fillRect(tetromino.block1.x*tileWidth, tetromino.block1.y*tileHeight, tileWidth, tileHeight);
+    context.fillRect(tetromino.block2.x*tileWidth, tetromino.block2.y*tileHeight, tileWidth, tileHeight);
+    context.fillRect(tetromino.block3.x*tileWidth, tetromino.block3.y*tileHeight, tileWidth, tileHeight);
+    context.fillRect(tetromino.block4.x*tileWidth, tetromino.block4.y*tileHeight, tileWidth, tileHeight);
+    context.fillStyle = color(tetromino.color);
+    context.fillRect(tetromino.block1.x*tileWidth+1, tetromino.block1.y*tileHeight+1, tileWidth-2, tileHeight-2);
+    context.fillRect(tetromino.block2.x*tileWidth+1, tetromino.block2.y*tileHeight+1, tileWidth-2, tileHeight-2);
+    context.fillRect(tetromino.block3.x*tileWidth+1, tetromino.block3.y*tileHeight+1, tileWidth-2, tileHeight-2);
+    context.fillRect(tetromino.block4.x*tileWidth+1, tetromino.block4.y*tileHeight+1, tileWidth-2, tileHeight-2);
+
+    //affichage du score
+    context.fillStyle = "#B0B";
+    context.fillRect(0,context.height-scoreWindowHeight,context.width,scoreWindowHeight);
+    context.font = "small-caps 20px Impact";
+    context.fillStyle = "#FFF";
+    context.fillText("Score : " + game.score + " Lines : " + game.lines +" Level : " + game.level, 0, context.height-2);
+    
+    //affichage des blocs déjà placés
+    for(let i = 0 ; i<10 ; i++){
+        for(let j = 0 ; j<20 ; j++){
+            if(grid[i][j]!=0){
+                context.fillStyle = color(grid[i][j]);
+                context.fillRect(i*tileWidth+1, j*tileHeight+1, tileWidth-2, tileHeight-2);
+            }
+        }
+    }
+    
+}
+
+/**
+>>>>>>> 6201cd40ee58b1aa74f8f04dc9b20c8f29bb8a37
  * retourne le code Hexadécimal de la couleur d'un tetromino
  * @param {number} color Couleur du tetromino
  * @returns {String} Couleur en héxadécimale
@@ -259,7 +342,50 @@ color = function color(color){
     }
 }
 
+
 /**
+<<<<<<< HEAD
+=======
+ * Fonction de mise à jour de l'état du jeu
+ * @param {number} d date 
+ */
+update = function update(d) {
+    if(d-lastTimeUpdate > 700 || (downKeyDown && d-lastTimeUpdate > 100)){
+        tetromino.fall();
+        if (downKeyDown){
+            game.score++;
+        }
+        if(!tetromino.check()){
+            tetromino.upShift();
+            printInGrid();
+            tetromino = spawnTetromino();
+        }
+        lastTimeUpdate = d;
+    }
+    if(rightKeyDown && d-lastMoveTime > 100){
+        tetromino.rightShift();
+        if(!tetromino.check()){
+            tetromino.leftShift();
+        }
+        lastMoveTime = d;
+    }
+    if(leftKeyDown && d-lastMoveTime > 100){
+        tetromino.leftShift();
+        if(!tetromino.check()){
+            tetromino.rightShift();
+        }
+        lastMoveTime = d;
+    }
+    if(upKeyDown && d-lastMoveTime > 100){
+        tetromino = rotate(tetromino);
+        lastMoveTime = d;
+    }
+}
+
+/////////////////////////////
+
+/**
+>>>>>>> 6201cd40ee58b1aa74f8f04dc9b20c8f29bb8a37
  * enregistre dans la grille la position du tetromino
  */
 printInGrid = function printInGrid(){
@@ -271,7 +397,7 @@ printInGrid = function printInGrid(){
 
 /**
  * retourne la version tournée d'un quart de tour du tetromino en paramètre
- * @param {Tetromino} tetromino 
+ * @param {Tetromino} tetromino
  * @returns {Tetromino} la version tournée d'un quart de tour de tetromino (si possible)
  */
 rotate = function (tetromino) {
@@ -292,7 +418,7 @@ rotate = function (tetromino) {
                     res.block1.move(0, 1);
                     res.block2.move(1, 2);
                     res.block3.move(-1, 0);
-                    res.block4.move(-2, -1);
+                    res.block4.move(-2,-1);
                     res.nbRot++;
                     break;
                 case 2:
@@ -735,3 +861,47 @@ relacheClavier = function relacheClavier(event){
         break;
     }
 }
+
+/**
+ * Constructeur du type game
+ * @param {number} START_LEVEL level initial au début de la partie
+ */
+var game = function (START_LEVEL) {
+    this.level = START_LEVEL;
+    this.score = 0;
+    this.lines= 0;
+    var self = this;
+
+    /**
+     * mise à jour du score, du nombre de lignes complétées et du level
+     * @param {number []} completedLines lignes qui ont été complétées après un coup
+     */
+    this.updateGame = function (completedLines){
+        //on gère comment si le nombre de lignes est de 0?
+        switch (completedLines.length){
+            case 1 :
+                self.score += 40*(self.level+1);
+                self.lines++;
+            break;
+            case 2 :
+                self.score += 100*(self.level+1);
+                self.lines += 2;
+            break;
+            case 3 :
+                self.score += 300*(self.level+1);
+                self.lines += 3;
+            break;
+            case 4 :
+                self.score += 300*(self.level+1);
+                self.lines += 4;
+        }
+        self.level = Math.floor(self.lines/10);
+    }
+}
+
+
+
+
+
+
+
