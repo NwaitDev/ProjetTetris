@@ -1,10 +1,10 @@
-var INIT_LEVEL = 0;
+var START_LEVEL = 0;
 /**
  * Constructeur du type game
- * @param {number} INIT_LEVEL level initial au début de la partie
+ * @param {number} START_LEVEL level initial au début de la partie
  */
-var game = function (INIT_LEVEL) {
-    this.level = INIT_LEVEL;
+var game = function (START_LEVEL) {
+    this.level = START_LEVEL;
     this.score = 0;
     this.lines= 0;
     var self = this;
