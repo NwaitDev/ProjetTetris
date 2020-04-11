@@ -44,6 +44,7 @@ var downKeyDown = false;
 var upKeyDown = false;
 var leftKeyDown = false;
 var rightKeyDown = false;
+var spaceKeyDown = false;
 
 //ordonnée des lignes complétées :
 var lines = new Array();
@@ -382,6 +383,13 @@ update = function update(d) {
         tetromino = rotate(tetromino);
         lastMoveTime = d;
     }
+    
+    //if (spaceKeyDown){
+    //    while (tetromino.check()){
+    //        tetromino.fall();   
+    //    }
+    //    lastMoveTime = d;
+    //}
 }
 
 
@@ -718,34 +726,40 @@ deleteLines = function(lines, grid){
 
 appuiClavier = function appuiClavier(event){
     switch (event.keyCode){
-      case 38 :
-        upKeyDown = true;
-        break;
-      case 40 :
-        downKeyDown = true;
-        break;
-      case 37 :
-        leftKeyDown = true;
-        break;
-      case 39 :
-        rightKeyDown = true;
-        break;
+        case 38 :
+            upKeyDown = true;
+            break;
+        case 40 :
+            downKeyDown = true;
+            break;
+        case 37 :
+            leftKeyDown = true;
+            break;
+        case 39 :
+            rightKeyDown = true;
+            break;
+        case 32 :
+            spaceKeyDown = true;
+            break;
     }
 }
 relacheClavier = function relacheClavier(event){
     switch (event.keyCode){
-      case 38 :
-        upKeyDown = false;
-        break;
-      case 40 :
-        downKeyDown = false;
-        break;
-      case 37 :
-        leftKeyDown = false;
-        break;
-      case 39 :
-        rightKeyDown = false;
-        break;
+        case 38 :
+            upKeyDown = false;
+            break;
+        case 40 :
+            downKeyDown = false;
+            break;
+        case 37 :
+            leftKeyDown = false;
+            break;
+        case 39 :
+            rightKeyDown = false;
+            break;
+        case 32 :
+            spaceKeyDown = false;
+            break;
     }
 }
 
