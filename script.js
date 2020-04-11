@@ -384,12 +384,22 @@ update = function update(d) {
         lastMoveTime = d;
     }
     
-    //if (spaceKeyDown){
-    //    while (tetromino.check()){
-    //        tetromino.fall();   
-    //    }
-    //    lastMoveTime = d;
-    //}
+    if (spaceKeyDown && d-lastTimeUpdate > 100){
+        while (tetromino.check()){
+            tetromino.fall();   
+        }
+        if(!tetromino.check()){
+            tetromino.upShift();
+            printInGrid();
+            lines = completedLines(tetromino, grid);
+            if(lines.length !=0){
+                deleteLines(lines,grid);
+                game.updateGame(lines);
+            }
+            tetromino = spawnTetromino();
+        }
+        lastTimeUpdate = d;
+    }
 }
 
 
