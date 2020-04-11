@@ -358,6 +358,7 @@ update = function update(d) {
             lines = completedLines(tetromino, grid);
             if(lines.length !=0){
                 deleteLines(lines,grid);
+                game.updateGame(lines);
             }
             tetromino = spawnTetromino();
         }
