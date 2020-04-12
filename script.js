@@ -19,6 +19,15 @@ for (let i = 0; i<10; i++){
     }
 }
 
+//réinitialise la grille 
+resetGrid = function resetGrid(grid){
+    for (var i = 0; i<10; i++){
+        for(var j = 0; j<20; j++){
+            grid[i][j]=0;
+        }
+    }
+}
+
 //Level initial 
 var START_LEVEL = 0;
 
@@ -266,8 +275,10 @@ runGame = function runGame() {
     printStuff();
     if(!gameOver(tetromino)){
         requestAnimationFrame(runGame);
-    }else { //affichage de la fenêtre gameOver (fonction tetroNul()) avec choix de continuer ou quitter le jeu
-        alert("GAME OVER");   
+    }else { // faire affichage de la fenêtre gameOver (fonction tetroNul()) avec choix de continuer ou quitter le jeu
+        alert("GAME OVER");
+        resetGrid(grid);
+        printStuff();   //relancer une nouvelle partie 
     }
 }
 
