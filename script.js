@@ -14,7 +14,7 @@ var nextColor = Math.ceil(Math.random()*7);
 var grid = new Array();
 for (let i = 0; i<10; i++){
     grid[i]=new Array();
-    for(let j = 0; j<20;j++){
+    for (let j = 0; j<20; j++){
         grid[i][j]=0;
     }
 }
@@ -27,6 +27,8 @@ resetGrid = function resetGrid(grid){
         }
     }
 }
+
+
 
 //Level initial 
 var START_LEVEL = 0;
@@ -278,7 +280,14 @@ runGame = function runGame() {
     }else { // faire affichage de la fenêtre gameOver (fonction tetroNul()) avec choix de continuer ou quitter le jeu
         alert("GAME OVER");
         resetGrid(grid);
-        printStuff();   //relancer une nouvelle partie 
+        game.resetGame();
+        downKeyDown = false;
+        upKeyDown = false;
+        leftKeyDown = false;
+        rightKeyDown = false;
+        spaceKeyDown = false;
+        tetromino = spawnTetromino();
+        requestAnimationFrame(runGame);
     }
 }
 
@@ -398,8 +407,8 @@ update = function update(d) {
     }
     
     if (spaceKeyDown && d-lastTimeUpdate > 100){
-        while (tetromino.check()){
-            tetromino.fall();   
+       while (tetromino.check()){
+           tetromino.fall();   
         }
         if(!tetromino.check()){
             tetromino.upShift();
@@ -820,6 +829,15 @@ var game = function (START_LEVEL) {
                 self.lines += 4;
         }
         self.level = Math.floor(self.lines/10);
+    }
+
+    /**
+     * Réinitialisation des variables 
+     */
+    this.resetGame = function (){
+        self.level = START_LEVEL;
+        self.lines = 0;
+        self.score = 0;
     }
 }
 
