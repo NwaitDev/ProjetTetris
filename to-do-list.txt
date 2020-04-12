@@ -1,0 +1,15 @@
+- Fonction printMenu()
+	- choix du level initial
+	- choix d'une nouvelle partie apès game Over (spam de message si on clic sur oui ;) )
+
+- Fenêtre des scores sur le coté pour plus de visibilité
+
+- Fenêtre de prévisualisation des pièces
+
+- Remplir la grille de bloc multicolor après un game Over
+
+- Màj du score avec la barre espace 
+
+- Fonction qui réinitialise la valeur des touches du clavier
+
+-actualisation de la vitesse de chute en fct du level 
