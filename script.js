@@ -266,7 +266,9 @@ runGame = function runGame() {
     printStuff();
     if(!gameOver(tetromino)){
         requestAnimationFrame(runGame);
-    }//else affichage de la fenêtre gameOver
+    }else { //affichage de la fenêtre gameOver (fonction tetroNul()) avec choix de continuer ou quitter le jeu
+        alert("GAME OVER");   
+    }
 }
 
 /**
