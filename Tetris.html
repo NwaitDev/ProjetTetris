@@ -22,6 +22,23 @@
             canvas{
                 display: inline;
             }
+            input#volumeslider{
+                width: 100px;
+                background: #000;
+            }
+            button{border:none; cursor:pointer;}
+            button#playpausebtn{
+                background: url(icons/pause.png) no-repeat;
+                width: 25px;
+                height: 25px;
+            }
+            button#mutebtn{
+                background: url(icons/speaker.png) no-repeat;
+                width: 25px;
+                height: 25px;
+            }
+           
+
         </style>
     </head>
 <body onload="init()">
@@ -30,10 +47,12 @@
     <div>
         <canvas id="cvs" width=200 height=420 style="margin: 10px auto; border: solid 10px rgb(200, 0, 0);"></canvas>
     </div>
+    <div class = "audioContent">
+        <button id="playpausebtn"></button><button id="mutebtn"></button>
+        <input id="volumeslider" type ="range" min="0" max="100" value="100" step="1">
+    </div>
     <script src="script.js" type="text/JavaScript"></script>
-    <audio controls autoplay loop hidden>
-        <source src = "cytus-the-blocks-we-lovedampg.mp3">
-    </audio>
+    
 </body>
 
 </html>

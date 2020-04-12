@@ -851,6 +851,54 @@ gameOver = function (newTetromino){
 }
 
 
+/////////////Partie audio/////////////
+var audio, playbtn, mutebtn, volumeslider;
+
+function initAudioPlayer(){
+    audio = new Audio();
+    audio.src = "cytus-the-blocks-we-lovedampg.mp3";
+    audio.loop = true;
+    audio.play();   
+    //initialisation des variables
+    playbtn = document.getElementById("playpausebtn");
+    mutebtn = document.getElementById("mutebtn");
+    volumeslider = document.getElementById("volumeslider");
+    //Fonctions (play/mute)
+    playPause = function(){
+        if(audio.paused){
+            audio.play();
+            playbtn.style.background = "url(icons/pause.png) no-repeat";
+        }
+        else{
+            audio.pause();
+            playbtn.style.background = "url(icons/play.png) no-repeat";
+        }
+    }
+    ///
+    mute = function(){
+        if(audio.muted){
+            audio.muted = false;
+            mutebtn.style.background = "url(icons/speaker.png) no-repeat";
+        }
+        else{
+            audio.muted = true;
+            mutebtn.style.background = "url(icons/speaker_muted.png) no-repeat";
+        }
+    }
+    ///
+    setvolume = function(){
+        audio.volume = volumeslider.value / 100;
+    }
+
+    //Ecouteur d'évènements
+    playbtn.addEventListener("click",playPause);
+    mutebtn.addEventListener("click",mute);
+    volumeslider.addEventListener("mousemove",setvolume);
+    
+}
+
+window.addEventListener("load", initAudioPlayer);
+
 
 
 
