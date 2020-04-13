@@ -8,8 +8,6 @@
 
 - Remplir la grille de bloc multicolor après un game Over
 
-- Màj du score avec la barre espace 
-
 - Fonction qui réinitialise la valeur des touches du clavier
 
 -actualisation de la vitesse de chute en fct du level 
