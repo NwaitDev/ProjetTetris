@@ -409,10 +409,12 @@ update = function update(d) {
     if (spaceKeyDown && d-lastTimeUpdate > 100){
        while (tetromino.check()){
            tetromino.fall();   
+           game.score++;
         }
         if(!tetromino.check()){
             tetromino.upShift();
             printInGrid();
+            game.score--;
             lines = completedLines(tetromino, grid);
             if(lines.length !=0){
                 deleteLines(lines,grid);
