@@ -28,8 +28,6 @@ resetGrid = function resetGrid(grid){
     }
 }
 
-
-
 //Level initial 
 var START_LEVEL = 0;
 
@@ -42,6 +40,7 @@ var tileWidth;
 //Hauteur d'une case de la grille :
 var tileHeight; 
 
+//Hauteur de la fenêtre des scores
 var scoreWindowHeight = 20;
 
 //variable utilisée pour mesurer le temps écoulé entre deux récursions :
@@ -269,6 +268,7 @@ init = function() {
     runGame();
 
 }
+
 /**
  * Boucle de jeu
  */
@@ -278,14 +278,17 @@ runGame = function runGame() {
     if(!gameOver(tetromino)){
         requestAnimationFrame(runGame);
     }else { // faire affichage de la fenêtre gameOver (fonction tetroNul()) avec choix de continuer ou quitter le jeu
+        for(let i = 0 ; i<10 ; i++){
+            for(let j = 0 ; j<20 ; j++){
+                    grid[i][j] = Math.ceil(Math.random()*7);
+                    printStuff();
+            }
+        }
         alert("GAME OVER");
+        resetKeyDown();
+        //setTimeout(resetGrid(grid), 8000);
         resetGrid(grid);
         game.resetGame();
-        downKeyDown = false;
-        upKeyDown = false;
-        leftKeyDown = false;
-        rightKeyDown = false;
-        spaceKeyDown = false;
         tetromino = spawnTetromino();
         requestAnimationFrame(runGame);
     }
@@ -777,6 +780,7 @@ appuiClavier = function appuiClavier(event){
             break;
     }
 }
+
 relacheClavier = function relacheClavier(event){
     switch (event.keyCode){
         case 38 :
@@ -795,6 +799,17 @@ relacheClavier = function relacheClavier(event){
             spaceKeyDown = false;
             break;
     }
+}
+
+/**
+ * Action qui remet a faux l'état d'appui de toutes les touches directionnelles
+ */
+resetKeyDown = function resetKeyDown(){
+    upKeyDown = false;
+    downKeyDown = false;
+    leftKeyDown = false;
+    rightKeyDown = false;
+    spaceKeyDown = false;
 }
 
 /**
@@ -900,8 +915,3 @@ function initAudioPlayer(){
 }
 
 window.addEventListener("load", initAudioPlayer);
-
-
-
-
-
