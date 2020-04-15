@@ -448,7 +448,7 @@ update = function update(d) {
         lastMoveTime = d;
     }
     
-    if (spaceKeyDown && d-lastTimeUpdate > 150){
+    if (spaceKeyDown && d-lastTimeUpdate > 200){
        while (tetromino.check()){
            tetromino.fall();   
            game.score++;
@@ -743,7 +743,7 @@ completedLines = function(tetromino, grid){
     if(!res.includes(tetromino.block3.y)){
         i = 0; 
         isCompleted = true;
-        while (isCompleted && i<9){
+        while (isCompleted && i<=9){
             if(grid [i][tetromino.block3.y] !=0){
                 i++;
             }else{
@@ -758,7 +758,7 @@ completedLines = function(tetromino, grid){
     if(!res.includes(tetromino.block4.y)){
         i = 0; 
         isCompleted = true;
-        while (isCompleted && i<9){
+        while (isCompleted && i<=9){
             if(grid [i][tetromino.block4.y] !=0){
                 i++;
             }else{
