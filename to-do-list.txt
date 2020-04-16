@@ -1,11 +1,10 @@
+Amélioration possible :
+
 - Fonction printMenu()
 	- choix du level initial
 	- choix d'une nouvelle partie apès game Over (spam de message si on clic sur oui ;) )
 
-- Fenêtre des scores sur le coté pour plus de visibilité
-
-- Fenêtre de prévisualisation des pièces
+- mettre une tempo avant la suppression de lignes
 
 - Remplir la grille de bloc multicolor après un game Over
 
--actualisation de la vitesse de chute en fct du level 
