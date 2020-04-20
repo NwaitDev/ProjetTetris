@@ -32,7 +32,7 @@ resetGrid = function resetGrid(grid){
 }
 
 //Level initial 
-var START_LEVEL = 5;
+var START_LEVEL = 1;
 
 //Level maximal 
 const LEVEL_MAX = 9;
@@ -451,7 +451,7 @@ update = function update(d) {
         lastMoveTime = d;
     }
     
-    if (spaceKeyDown && d-lastTimeUpdate > 150){
+    if (spaceKeyDown && d-lastTimeUpdate > 100){
        while (tetromino.check()){
            tetromino.fall();   
            game.score++;
