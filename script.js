@@ -43,8 +43,8 @@ var tileWidth;
 //Hauteur d'une case de la grille :
 var tileHeight; 
 
-//Hauteur de la fenêtre des scores
-var scoreWindowWidth = 100;
+//Largeur de la fenêtre des scores
+var scoreWindowWidth;
 
 //variable utilisée pour mesurer le temps écoulé entre deux récursions :
 var lastTimeUpdate = Date.now();
@@ -263,6 +263,7 @@ init = function() {
     context.height = document.getElementById("cvs").height;
     document.addEventListener("keydown", appuiClavier);
     document.addEventListener("keyup", relacheClavier);
+    scoreWindowWidth = context.width/3;
     tileWidth = (context.width-scoreWindowWidth)/10;
     tileHeight = (context.height)/20;
     tetromino = spawnTetromino();
@@ -338,20 +339,20 @@ printStuff = function printStuff() {
     context.fillStyle = "#555";
     context.fillRect(context.width-scoreWindowWidth,0,scoreWindowWidth,context.height);
     context.fillStyle = "#FFF";
-    context.fillRect(context.width-scoreWindowWidth+5,20,scoreWindowWidth-10,scoreWindowWidth-10);
-    context.fillRect(context.width-scoreWindowWidth+5,context.height/2+5,scoreWindowWidth-10,160);
+    context.fillRect(context.width-scoreWindowWidth*0.95,0.2*scoreWindowWidth,scoreWindowWidth*0.9,scoreWindowWidth*0.9);
+    context.fillRect(context.width-scoreWindowWidth*0.95,context.height/2+0.05*scoreWindowWidth,scoreWindowWidth-0.1*scoreWindowWidth,scoreWindowWidth*1.6);
     context.fillStyle = "#000";
-    context.fillRect(context.width-scoreWindowWidth+10,25,scoreWindowWidth-20,scoreWindowWidth-20);
-    context.fillRect(context.width-scoreWindowWidth+10,context.height/2+10,scoreWindowWidth-20,150);
+    context.fillRect(context.width-scoreWindowWidth+0.1*scoreWindowWidth,scoreWindowWidth/4,scoreWindowWidth*0.8,scoreWindowWidth*0.8);
+    context.fillRect(context.width-scoreWindowWidth+0.1*scoreWindowWidth,context.height/2+scoreWindowWidth*0.1,scoreWindowWidth*0.8,scoreWindowWidth*1.5);
     //texte
-    context.font = "small-caps 20px Impact";
+    context.font = scoreWindowWidth*0.2+"px Impact";
     context.fillStyle = "#FFF";
-    context.fillText("Score :", context.width-scoreWindowWidth+15, context.height/2+28);
-    context.fillText(game.score, context.width-scoreWindowWidth+15, context.height/2+53);
-    context.fillText("Lines :", context.width-scoreWindowWidth+15, context.height/2+78);
-    context.fillText(game.lines, context.width-scoreWindowWidth+15, context.height/2+103);
-    context.fillText("Level :", context.width-scoreWindowWidth+15, context.height/2+128);
-    context.fillText(game.level, context.width-scoreWindowWidth+15, context.height/2+153);
+    context.fillText("Score :", context.width-scoreWindowWidth*0.85, context.height/2+scoreWindowWidth/4+3);
+    context.fillText(game.score, context.width-scoreWindowWidth*0.85, context.height/2+scoreWindowWidth/2+3);
+    context.fillText("Lines :", context.width-scoreWindowWidth*0.85, context.height/2+3*scoreWindowWidth/4+3);
+    context.fillText(game.lines, context.width-scoreWindowWidth*0.85, context.height/2+scoreWindowWidth+3);
+    context.fillText("Level :", context.width-scoreWindowWidth*0.85, context.height/2+5*scoreWindowWidth/4+3);
+    context.fillText(game.level, context.width-scoreWindowWidth*0.85, context.height/2+6*scoreWindowWidth/4+3);
 
     //affichage des blocs déjà placés
     for(let i = 0 ; i<10 ; i++){
@@ -365,10 +366,10 @@ printStuff = function printStuff() {
 
     //affichage du prochain tetromino dans la fenêtre de prévisualisation
     context.fillStyle = color(nextTetro.color);
-    context.fillRect(context.width-scoreWindowWidth+nextTetro.block1.x*tileWidth+1-50, nextTetro.block1.y*tileHeight+1+47, tileWidth-2, tileHeight-2);
-    context.fillRect(context.width-scoreWindowWidth+nextTetro.block2.x*tileWidth+1-50, nextTetro.block2.y*tileHeight+1+47, tileWidth-2, tileHeight-2);
-    context.fillRect(context.width-scoreWindowWidth+nextTetro.block3.x*tileWidth+1-50, nextTetro.block3.y*tileHeight+1+47, tileWidth-2, tileHeight-2);
-    context.fillRect(context.width-scoreWindowWidth+nextTetro.block4.x*tileWidth+1-50, nextTetro.block4.y*tileHeight+1+47, tileWidth-2, tileHeight-2);
+    context.fillRect(context.width-scoreWindowWidth+nextTetro.block1.x*tileWidth+1-scoreWindowWidth/2, nextTetro.block1.y*tileHeight+0.48*scoreWindowWidth, tileWidth-2, tileHeight-2);
+    context.fillRect(context.width-scoreWindowWidth+nextTetro.block2.x*tileWidth+1-scoreWindowWidth/2, nextTetro.block2.y*tileHeight+0.48*scoreWindowWidth, tileWidth-2, tileHeight-2);
+    context.fillRect(context.width-scoreWindowWidth+nextTetro.block3.x*tileWidth+1-scoreWindowWidth/2, nextTetro.block3.y*tileHeight+0.48*scoreWindowWidth, tileWidth-2, tileHeight-2);
+    context.fillRect(context.width-scoreWindowWidth+nextTetro.block4.x*tileWidth+1-scoreWindowWidth/2, nextTetro.block4.y*tileHeight+0.48*scoreWindowWidth, tileWidth-2, tileHeight-2);
     
 }
 
@@ -410,7 +411,7 @@ fallTime = function(){
  * @param {number} d date 
  */
 update = function update(d) {
-    if(d-lastTimeUpdate > fallTime() || (downKeyDown && d-lastTimeUpdate > 150)){
+    if(d-lastTimeUpdate > fallTime() || (downKeyDown && d-lastTimeUpdate > 130)){
         tetromino.fall();
         if (downKeyDown){
             game.score++;
@@ -429,21 +430,21 @@ update = function update(d) {
         }
         lastTimeUpdate = d;
     }
-    if(rightKeyDown && d-lastMoveTime > 150){
+    if(rightKeyDown && d-lastMoveTime > 130){
         tetromino.rightShift();
         if(!tetromino.check()){
             tetromino.leftShift();
         }
         lastMoveTime = d;
     }
-    if(leftKeyDown && d-lastMoveTime > 150){
+    if(leftKeyDown && d-lastMoveTime > 130){
         tetromino.leftShift();
         if(!tetromino.check()){
             tetromino.rightShift();
         }
         lastMoveTime = d;
     }
-    if(upKeyDown && d-lastMoveTime > 150){
+    if(upKeyDown && d-lastMoveTime > 130){
         tetromino = rotate(tetromino);
         lastMoveTime = d;
     }
@@ -793,7 +794,7 @@ deleteLines = function(lines, grid){
     let y;
     for (let i=0; i<lines.length; i++){
         y = lines[i];
-        for (let x=0; x<9; x++){
+        for (let x=0; x<=9; x++){
             grid[x][y] = 0;
         }
         for (let k=y; k>0; k--){
@@ -910,6 +911,8 @@ gameOver = function (newTetromino){
 
 
 /////////////Partie audio/////////////
+
+/*
 var audio, playbtn, mutebtn, volumeslider;
 
 function initAudioPlayer(){
@@ -956,3 +959,4 @@ function initAudioPlayer(){
 }
 
 window.addEventListener("load", initAudioPlayer);
+*/
