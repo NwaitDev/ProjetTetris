@@ -353,7 +353,7 @@ printStuff = function printStuff() {
     context.fillText("Score :", context.width-scoreWindowWidth*0.85, context.height/2+scoreWindowWidth/4+3);
     context.fillText(game.score, context.width-scoreWindowWidth*0.85, context.height/2+scoreWindowWidth/2+3);
     context.fillText("Lines :", context.width-scoreWindowWidth*0.85, context.height/2+3*scoreWindowWidth/4+3);
-    context.fillText(game.lines, context.width-scoreWindowWidth*0.85, context.height/2+scoreWindowWidth+3);
+    context.fillText(game.displayLines(), context.width-scoreWindowWidth*0.85, context.height/2+scoreWindowWidth+3);
     context.fillText("Level :", context.width-scoreWindowWidth*0.85, context.height/2+5*scoreWindowWidth/4+3);
     context.fillText(game.level, context.width-scoreWindowWidth*0.85, context.height/2+6*scoreWindowWidth/4+3);
 
