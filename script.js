@@ -32,7 +32,10 @@ resetGrid = function resetGrid(grid){
 }
 
 //Level initial 
-var START_LEVEL = 0;
+var START_LEVEL = 5;
+
+//Level maximal 
+const LEVEL_MAX = 9;
 
 //fenêtre des scores 
 var game;
@@ -349,7 +352,7 @@ printStuff = function printStuff() {
     context.fillText("Score :", context.width-scoreWindowWidth+15, context.height/2+28);
     context.fillText(game.score, context.width-scoreWindowWidth+15, context.height/2+53);
     context.fillText("Lines :", context.width-scoreWindowWidth+15, context.height/2+78);
-    context.fillText(game.lines, context.width-scoreWindowWidth+15, context.height/2+103);
+    context.fillText(game.displayLines(), context.width-scoreWindowWidth+15, context.height/2+103);
     context.fillText("Level :", context.width-scoreWindowWidth+15, context.height/2+128);
     context.fillText(game.level, context.width-scoreWindowWidth+15, context.height/2+153);
 
@@ -402,7 +405,7 @@ color = function color(color){
  * Fonction renvoyant l'intervalle de temps (en ms) entre deux descentes d'un tetromino
  */
 fallTime = function(){
-    return 1000-200*game.level;
+    return 1000-95*game.level;
 }
 
 /**
@@ -418,7 +421,7 @@ update = function update(d) {
         if(!tetromino.check()){
             tetromino.upShift();
             printInGrid();
-            lines = completedLines(tetromino, grid);
+            lines = completedLines(grid);
             if(lines.length !=0){
                 deleteLines(lines,grid);
                 game.updateGame(lines);
@@ -448,7 +451,7 @@ update = function update(d) {
         lastMoveTime = d;
     }
     
-    if (spaceKeyDown && d-lastTimeUpdate > 200){
+    if (spaceKeyDown && d-lastTimeUpdate > 150){
        while (tetromino.check()){
            tetromino.fall();   
            game.score++;
@@ -457,7 +460,7 @@ update = function update(d) {
             tetromino.upShift();
             printInGrid();
             game.score--;
-            lines = completedLines(tetromino, grid);
+            lines = completedLines(grid);
             if(lines.length !=0){
                 deleteLines(lines,grid);
                 game.updateGame(lines);
@@ -710,64 +713,23 @@ rotate = function (tetromino) {
  * @param {int[][]} grid grille de jeu
  * @returns {int[]} tableau des cases complétées
  */
-completedLines = function(tetromino, grid){
+completedLines = function(grid){
     var isCompleted = true;
     var res = [];
-    var i = 0;
-    while (isCompleted && i<=9){
-        if(grid [i][tetromino.block1.y] !=0){
-            i++;
-        }else{
-            isCompleted = false;
-        }
-    }
-    if(isCompleted){
-        res.push(tetromino.block1.y);
-    }
-    
-    if (!res.includes(tetromino.block2.y)){
-        i = 0; 
-        isCompleted = true;
-        while (isCompleted && i<=9){
-            if(grid [i][tetromino.block2.y] !=0){
-                i++;
+    let j = 0;
+    for(var i = 0; i<20; i++){
+        j = 0;
+        while (isCompleted && j<10){
+            if(grid [j][i] !=0){
+                j++;
             }else{
                 isCompleted = false;
             }
         }
         if(isCompleted){
-            res.push(tetromino.block2.y);
+            res.push(i);
         }
-    }
-
-    if(!res.includes(tetromino.block3.y)){
-        i = 0; 
         isCompleted = true;
-        while (isCompleted && i<=9){
-            if(grid [i][tetromino.block3.y] !=0){
-                i++;
-            }else{
-                isCompleted = false;
-            }
-        }
-        if(isCompleted){
-            res.push(tetromino.block3.y);
-        }
-    }
-    
-    if(!res.includes(tetromino.block4.y)){
-        i = 0; 
-        isCompleted = true;
-        while (isCompleted && i<=9){
-            if(grid [i][tetromino.block4.y] !=0){
-                i++;
-            }else{
-                isCompleted = false;
-            }
-        }
-        if(isCompleted){
-            res.push(tetromino.block4.y);
-        }
     }
     return res;
 }
@@ -860,8 +822,9 @@ resetKeyDown = function resetKeyDown(){
 var game = function (START_LEVEL) {
     this.level = START_LEVEL;
     this.score = 0;
-    this.lines= 0;
+    this.lines = 10*START_LEVEL;
     var self = this;
+    
 
     /**
      * mise à jour du score, du nombre de lignes complétées et du level
@@ -869,6 +832,7 @@ var game = function (START_LEVEL) {
      */
     this.updateGame = function (completedLines){
         //on gère comment si le nombre de lignes est de 0?
+
         switch (completedLines.length){
             case 1 :
                 self.score += 40*(self.level+1);
@@ -886,7 +850,17 @@ var game = function (START_LEVEL) {
                 self.score += 300*(self.level+1);
                 self.lines += 4;
         }
-        self.level = Math.floor(self.lines/10);
+
+        if (self.level <9 ){
+            self.level = Math.floor(self.lines/10);
+        }
+    }
+
+    /**
+     * Mise a jour du nombre de lignes à afficher 
+     */
+    this.displayLines = function (){
+        return self.lines-(10*START_LEVEL);
     }
 
     /**
