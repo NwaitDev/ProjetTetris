@@ -405,7 +405,7 @@ color = function color(color){
  * Fonction renvoyant l'intervalle de temps (en ms) entre deux descentes d'un tetromino
  */
 fallTime = function(){
-    return 1000-95*game.level;
+    return (-1000*game.level + 14000)/19;
 }
 
 /**
@@ -426,6 +426,7 @@ update = function update(d) {
                 deleteLines(lines,grid);
                 game.updateGame(lines);
             }
+            resetKeyDown();
             tetromino = spawnTetromino();
             nextColor = Math.ceil(Math.random()*7);
             nextTetro = spawnTetromino();
@@ -439,7 +440,7 @@ update = function update(d) {
         }
         lastMoveTime = d;
     }
-    if(leftKeyDown && d-lastMoveTime > 150){
+    if(leftKeyDown && d-lastMoveTime > 50){
         tetromino.leftShift();
         if(!tetromino.check()){
             tetromino.rightShift();
@@ -465,6 +466,7 @@ update = function update(d) {
                 deleteLines(lines,grid);
                 game.updateGame(lines);
             }
+            resetKeyDown();
             tetromino = spawnTetromino();
             nextColor = Math.ceil(Math.random()*7);
             nextTetro = spawnTetromino();
