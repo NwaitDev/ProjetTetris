@@ -1,6 +1,6 @@
 var context = null;
 
-/**
+/*
  * déclaration des variables
  */
 
@@ -8,43 +8,44 @@ var context = null;
 var tetromino;
 
 //couleur du prochain tetromino :
-var nextColor = Math.ceil(Math.random()*7);
+var nextColor = Math.ceil(Math.random() * 7);
 
 //prochain tetromino
 var nextTetro;
 
+//coordonées d'un clic
+var clic = { x: 0, y: 0 };
+
+
 //grille de jeu :
 var grid = new Array();
-for (let i = 0; i<10; i++){
-    grid[i]=new Array();
-    for (let j = 0; j<20; j++){
-        grid[i][j]=0;
+for (let i = 0; i < 10; i++) {
+    grid[i] = new Array();
+    for (let j = 0; j < 20; j++) {
+        grid[i][j] = 0;
     }
 }
 
 //réinitialise la grille 
-resetGrid = function resetGrid(grid){
-    for (var i = 0; i<10; i++){
-        for(var j = 0; j<20; j++){
-            grid[i][j]=0;
+resetGrid = function resetGrid(grid) {
+    for (var i = 0; i < 10; i++) {
+        for (var j = 0; j < 20; j++) {
+            grid[i][j] = 0;
         }
     }
 }
 
-//Level initial 
-var START_LEVEL = 1;
-
 //Level maximal 
 const LEVEL_MAX = 9;
 
-//fenêtre des scores 
+//variable de jeu
 var game;
 
 //Largeur d'une case de la grille :
-var tileWidth; 
+var tileWidth;
 
 //Hauteur d'une case de la grille :
-var tileHeight; 
+var tileHeight;
 
 //Largeur de la fenêtre des scores
 var scoreWindowWidth;
@@ -145,7 +146,7 @@ var Tetromino = function Tetromino(block1, block2, block3, block4, color, nbRot)
         self.block3.y += 1;
         self.block4.y += 1;
     }
-    
+
     /**
      * décalage à gauche du tetromino
      */
@@ -181,75 +182,75 @@ var Tetromino = function Tetromino(block1, block2, block3, block4, color, nbRot)
  * remplace le tetromino en cours de placement par un autre tetromino en haut de la grille
  * @returns {Tetromino} un nouveau tetromino en haut de la grille
  */
-spawnTetromino = function(){
+spawnTetromino = function () {
     let tetromino;
-    switch(nextColor){
-        case 1 :
+    switch (nextColor) {
+        case 1:
             tetromino = new Tetromino(
-                new Block(4,0),
-                new Block(3,0),
-                new Block(5,0),
-                new Block(6,0),
+                new Block(4, 0),
+                new Block(3, 0),
+                new Block(5, 0),
+                new Block(6, 0),
                 1,
                 0
             );
-        break;
-        case 2 :
+            break;
+        case 2:
             tetromino = new Tetromino(
-                new Block(4,1),
-                new Block(3,1),
-                new Block(3,0),
-                new Block(5,1),
+                new Block(4, 1),
+                new Block(3, 1),
+                new Block(3, 0),
+                new Block(5, 1),
                 2,
                 0
             );
-        break;
-        case 3 :
+            break;
+        case 3:
             tetromino = new Tetromino(
-                new Block(4,1),
-                new Block(5,1),
-                new Block(5,0),
-                new Block(3,1),
+                new Block(4, 1),
+                new Block(5, 1),
+                new Block(5, 0),
+                new Block(3, 1),
                 3,
                 0
             );
-        break;
-        case 4 :
+            break;
+        case 4:
             tetromino = new Tetromino(
-                new Block(4,0),
-                new Block(5,0),
-                new Block(4,1),
-                new Block(5,1),
+                new Block(4, 0),
+                new Block(5, 0),
+                new Block(4, 1),
+                new Block(5, 1),
                 4,
                 0
             );
-        break;
-        case 5 :
+            break;
+        case 5:
             tetromino = new Tetromino(
-                new Block(4,1),
-                new Block(3,1),
-                new Block(4,0),
-                new Block(5,0),
+                new Block(4, 1),
+                new Block(3, 1),
+                new Block(4, 0),
+                new Block(5, 0),
                 5,
                 0
             );
-        break;
-        case 6 :
+            break;
+        case 6:
             tetromino = new Tetromino(
-                new Block(4,1),
-                new Block(5,1),
-                new Block(4,0),
-                new Block(3,1),
+                new Block(4, 1),
+                new Block(5, 1),
+                new Block(4, 0),
+                new Block(3, 1),
                 6,
                 0
             );
-        break;
-        case 7 :
+            break;
+        case 7:
             tetromino = new Tetromino(
-                new Block(4,1),
-                new Block(5,1),
-                new Block(4,0),
-                new Block(3,0),
+                new Block(4, 1),
+                new Block(5, 1),
+                new Block(4, 0),
+                new Block(3, 0),
                 7,
                 0
             );
@@ -258,25 +259,145 @@ spawnTetromino = function(){
 }
 
 /**
+ * Constructeur du type game
+ */
+var game = function () {
+    this.startGame = false;
+    this.level = 0;
+    this.startLevel = 0;
+    this.score = 0;
+    this.lines = 0;
+    var self = this;
+
+
+    /**
+     * mise à jour du score, du nombre de lignes complétées et du level
+     * @param {number []} completedLines lignes qui ont été complétées après un coup
+     */
+    this.updateGame = function (completedLines) {
+        //on gère comment si le nombre de lignes est de 0?
+
+        switch (completedLines.length) {
+            case 1:
+                self.score += 40 * (self.level + 1);
+                self.lines++;
+                break;
+            case 2:
+                self.score += 100 * (self.level + 1);
+                self.lines += 2;
+                break;
+            case 3:
+                self.score += 300 * (self.level + 1);
+                self.lines += 3;
+                break;
+            case 4:
+                self.score += 300 * (self.level + 1);
+                self.lines += 4;
+        }
+
+        if (self.level < 9) {
+            self.level = Math.floor(self.lines / 10);
+        }
+    }
+
+    /**
+     * Mise a jour du nombre de lignes à afficher 
+     */
+    this.displayLines = function () {
+        return self.lines - (10 * self.startLevel);
+    }
+
+    /**
+     * Réinitialisation des variables 
+     */
+    this.resetGame = function () {
+        self.level = 0;
+        self.lines = 0;
+        self.score = 0;
+        self.startGame = false;
+    }
+}
+
+/**
  * Fonction d'initialisation/lancement du jeu
  */
-init = function() {
+init = function () {
     context = document.getElementById("cvs").getContext("2d");
     context.width = document.getElementById("cvs").width;
     context.height = document.getElementById("cvs").height;
     document.addEventListener("keydown", appuiClavier);
     document.addEventListener("keyup", relacheClavier);
-    scoreWindowWidth = context.width/3;
-    tileWidth = (context.width-scoreWindowWidth)/10;
-    tileHeight = (context.height)/20;
+    document.addEventListener("click", captureClicSouris)
+    scoreWindowWidth = context.width / 3;
+    tileWidth = (context.width - scoreWindowWidth) / 10;
+    tileHeight = (context.height) / 20;
     tetromino = spawnTetromino();
-    nextColor = Math.ceil(Math.random()*7);
+    nextColor = Math.ceil(Math.random() * 7);
     nextTetro = spawnTetromino();
-    game = new game (START_LEVEL);
-    runGame();
-
+    game = new game();
+    runMenu();
 }
 
+runMenu = function runMenu() {
+    printMenu();
+    updateMenu();
+    if(!game.startGame){
+        requestAnimationFrame(runMenu);
+    }else{
+        runGame();
+    }
+}
+
+printMenu = function () {
+    context.fillStyle = "#000";
+    context.fillRect(0, 0, context.width, context.height);
+    context.font = scoreWindowWidth * 0.2 + "px Impact";
+    context.fillStyle = "#0F0";
+    context.fillText("Tetris, a CMI adventure", context.width / 10, context.height / 3);
+    context.fillStyle = "#F00";
+    context.fillText("Choose difficulty :", context.width / 10, context.height / 2);
+    for (let i = 0; i < 10; i++) {
+        context.fillStyle = levelColor(i);
+        context.fillText(i, context.width / 30 + i * context.width / 10, 2 * context.height / 3);
+    }
+    context.fillStyle = "#FF0"
+    context.fillText("Start !", context.width / 10, 5 * context.height / 6);
+}
+
+updateMenu = function(){
+    let leftBorder;
+    let downBorder;
+    let rightBorder;
+    let upBorder;
+    for(let i = 0; i<10;i++){
+        leftBorder = context.width / 30 + i * context.width / 10;
+        downBorder = 2 * context.height / 3;
+        upBorder = downBorder -20;
+        rightBorder = leftBorder + 10;
+        if(clic.x>=leftBorder && clic.x<=rightBorder && clic.y<=downBorder && clic.y>=upBorder){
+            game.startLevel = i;
+            game.level = i;
+        }
+    }
+    leftBorder = context.width / 10;
+    rightBorder = leftBorder + 50;
+    downBorder = 5 * context.height / 6;
+    upBorder = downBorder-20
+    
+    if(clic.x>=leftBorder && clic.x<=rightBorder && clic.y<=downBorder && clic.y>=upBorder){
+        game.startGame = true;
+        clic.x = 0;
+        clic.y = 0;
+    }
+}
+
+levelColor = function (i) {
+    if (i == game.level) {
+        return "#FFF";
+    } else {
+        return "#00F";
+    }
+}
 
 
 /**
@@ -285,25 +406,25 @@ init = function() {
 runGame = function runGame() {
     update(Date.now());
     printStuff();
-    if(!gameOver(tetromino)){
+    if (!gameOver(tetromino)) {
         requestAnimationFrame(runGame);
-    }else { // faire affichage de la fenêtre gameOver (fonction tetroNul()) avec choix de continuer ou quitter le jeu
-        for(let i = 0 ; i<10 ; i++){
-            for(let j = 0 ; j<20 ; j++){
-                    if(grid[i][j]==0){
-                    grid[i][j] = Math.ceil(Math.random()*7);
+    } else { // faire affichage de la fenêtre gameOver (fonction tetroNul()) avec choix de continuer ou quitter le jeu
+        for (let i = 0; i < 10; i++) {
+            for (let j = 0; j < 20; j++) {
+                if (grid[i][j] == 0) {
+                    grid[i][j] = Math.ceil(Math.random() * 7);
                 }
             }
         }
         printStuff();
         alert("GAME OVER");
         resetKeyDown();
-        resetGrid(grid);
+        resetGrid();
         game.resetGame();
         tetromino = spawnTetromino();
-        nextColor = Math.ceil(Math.random()*7);
+        nextColor = Math.ceil(Math.random() * 7);
         nextTetro = spawnTetromino();
-        requestAnimationFrame(runGame);
+        runMenu();
     }
 }
 
@@ -315,65 +436,65 @@ runGame = function runGame() {
  */
 printStuff = function printStuff() {
     context.clearRect(0, 0, context.width, context.height);
-    
+
     //affichage de la grille
     context.fillStyle = "#555";
-    for(let i = 1; i<10;i++){
-        context.fillRect(tileWidth*i-1,0,2,context.height);
+    for (let i = 1; i < 10; i++) {
+        context.fillRect(tileWidth * i - 1, 0, 2, context.height);
     }
-    for(let i = 1;i<=20;i++){
-        context.fillRect(0,tileHeight*i-1,context.width,2);
+    for (let i = 1; i <= 20; i++) {
+        context.fillRect(0, tileHeight * i - 1, context.width, 2);
     }
 
     //affichage du tetromino
     context.fillStyle = "#FFF"
-    context.fillRect(tetromino.block1.x*tileWidth, tetromino.block1.y*tileHeight, tileWidth, tileHeight);
-    context.fillRect(tetromino.block2.x*tileWidth, tetromino.block2.y*tileHeight, tileWidth, tileHeight);
-    context.fillRect(tetromino.block3.x*tileWidth, tetromino.block3.y*tileHeight, tileWidth, tileHeight);
-    context.fillRect(tetromino.block4.x*tileWidth, tetromino.block4.y*tileHeight, tileWidth, tileHeight);
+    context.fillRect(tetromino.block1.x * tileWidth, tetromino.block1.y * tileHeight, tileWidth, tileHeight);
+    context.fillRect(tetromino.block2.x * tileWidth, tetromino.block2.y * tileHeight, tileWidth, tileHeight);
+    context.fillRect(tetromino.block3.x * tileWidth, tetromino.block3.y * tileHeight, tileWidth, tileHeight);
+    context.fillRect(tetromino.block4.x * tileWidth, tetromino.block4.y * tileHeight, tileWidth, tileHeight);
     context.fillStyle = color(tetromino.color);
-    context.fillRect(tetromino.block1.x*tileWidth+1, tetromino.block1.y*tileHeight+1, tileWidth-2, tileHeight-2);
-    context.fillRect(tetromino.block2.x*tileWidth+1, tetromino.block2.y*tileHeight+1, tileWidth-2, tileHeight-2);
-    context.fillRect(tetromino.block3.x*tileWidth+1, tetromino.block3.y*tileHeight+1, tileWidth-2, tileHeight-2);
-    context.fillRect(tetromino.block4.x*tileWidth+1, tetromino.block4.y*tileHeight+1, tileWidth-2, tileHeight-2);
+    context.fillRect(tetromino.block1.x * tileWidth + 1, tetromino.block1.y * tileHeight + 1, tileWidth - 2, tileHeight - 2);
+    context.fillRect(tetromino.block2.x * tileWidth + 1, tetromino.block2.y * tileHeight + 1, tileWidth - 2, tileHeight - 2);
+    context.fillRect(tetromino.block3.x * tileWidth + 1, tetromino.block3.y * tileHeight + 1, tileWidth - 2, tileHeight - 2);
+    context.fillRect(tetromino.block4.x * tileWidth + 1, tetromino.block4.y * tileHeight + 1, tileWidth - 2, tileHeight - 2);
 
     ////affichage du score
     //Fenêtres
     context.fillStyle = "#555";
-    context.fillRect(context.width-scoreWindowWidth,0,scoreWindowWidth,context.height);
+    context.fillRect(context.width - scoreWindowWidth, 0, scoreWindowWidth, context.height);
     context.fillStyle = "#FFF";
-    context.fillRect(context.width-scoreWindowWidth*0.95,0.2*scoreWindowWidth,scoreWindowWidth*0.9,scoreWindowWidth*0.9);
-    context.fillRect(context.width-scoreWindowWidth*0.95,context.height/2+0.05*scoreWindowWidth,scoreWindowWidth-0.1*scoreWindowWidth,scoreWindowWidth*1.6);
+    context.fillRect(context.width - scoreWindowWidth * 0.95, 0.2 * scoreWindowWidth, scoreWindowWidth * 0.9, scoreWindowWidth * 0.9);
+    context.fillRect(context.width - scoreWindowWidth * 0.95, context.height / 2 + 0.05 * scoreWindowWidth, scoreWindowWidth - 0.1 * scoreWindowWidth, scoreWindowWidth * 1.6);
     context.fillStyle = "#000";
-    context.fillRect(context.width-scoreWindowWidth+0.1*scoreWindowWidth,scoreWindowWidth/4,scoreWindowWidth*0.8,scoreWindowWidth*0.8);
-    context.fillRect(context.width-scoreWindowWidth+0.1*scoreWindowWidth,context.height/2+scoreWindowWidth*0.1,scoreWindowWidth*0.8,scoreWindowWidth*1.5);
+    context.fillRect(context.width - scoreWindowWidth + 0.1 * scoreWindowWidth, scoreWindowWidth / 4, scoreWindowWidth * 0.8, scoreWindowWidth * 0.8);
+    context.fillRect(context.width - scoreWindowWidth + 0.1 * scoreWindowWidth, context.height / 2 + scoreWindowWidth * 0.1, scoreWindowWidth * 0.8, scoreWindowWidth * 1.5);
     //texte
-    context.font = scoreWindowWidth*0.2+"px Impact";
+    context.font = scoreWindowWidth * 0.2 + "px Impact";
     context.fillStyle = "#FFF";
-    context.fillText("Score :", context.width-scoreWindowWidth*0.85, context.height/2+scoreWindowWidth/4+3);
-    context.fillText(game.score, context.width-scoreWindowWidth*0.85, context.height/2+scoreWindowWidth/2+3);
-    context.fillText("Lines :", context.width-scoreWindowWidth*0.85, context.height/2+3*scoreWindowWidth/4+3);
-    context.fillText(game.displayLines(), context.width-scoreWindowWidth*0.85, context.height/2+scoreWindowWidth+3);
-    context.fillText("Level :", context.width-scoreWindowWidth*0.85, context.height/2+5*scoreWindowWidth/4+3);
-    context.fillText(game.level, context.width-scoreWindowWidth*0.85, context.height/2+6*scoreWindowWidth/4+3);
+    context.fillText("Score :", context.width - scoreWindowWidth * 0.85, context.height / 2 + scoreWindowWidth / 4 + 3);
+    context.fillText(game.score, context.width - scoreWindowWidth * 0.85, context.height / 2 + scoreWindowWidth / 2 + 3);
+    context.fillText("Lines :", context.width - scoreWindowWidth * 0.85, context.height / 2 + 3 * scoreWindowWidth / 4 + 3);
+    context.fillText(game.displayLines(), context.width - scoreWindowWidth * 0.85, context.height / 2 + scoreWindowWidth + 3);
+    context.fillText("Level :", context.width - scoreWindowWidth * 0.85, context.height / 2 + 5 * scoreWindowWidth / 4 + 3);
+    context.fillText(game.level, context.width - scoreWindowWidth * 0.85, context.height / 2 + 6 * scoreWindowWidth / 4 + 3);
 
     //affichage des blocs déjà placés
-    for(let i = 0 ; i<10 ; i++){
-        for(let j = 0 ; j<20 ; j++){
-            if(grid[i][j]!=0){
+    for (let i = 0; i < 10; i++) {
+        for (let j = 0; j < 20; j++) {
+            if (grid[i][j] != 0) {
                 context.fillStyle = color(grid[i][j]);
-                context.fillRect(i*tileWidth+1, j*tileHeight+1, tileWidth-2, tileHeight-2);
+                context.fillRect(i * tileWidth + 1, j * tileHeight + 1, tileWidth - 2, tileHeight - 2);
             }
         }
     }
 
     //affichage du prochain tetromino dans la fenêtre de prévisualisation
     context.fillStyle = color(nextTetro.color);
-    context.fillRect(context.width-scoreWindowWidth+nextTetro.block1.x*tileWidth+1-scoreWindowWidth/2, nextTetro.block1.y*tileHeight+0.48*scoreWindowWidth, tileWidth-2, tileHeight-2);
-    context.fillRect(context.width-scoreWindowWidth+nextTetro.block2.x*tileWidth+1-scoreWindowWidth/2, nextTetro.block2.y*tileHeight+0.48*scoreWindowWidth, tileWidth-2, tileHeight-2);
-    context.fillRect(context.width-scoreWindowWidth+nextTetro.block3.x*tileWidth+1-scoreWindowWidth/2, nextTetro.block3.y*tileHeight+0.48*scoreWindowWidth, tileWidth-2, tileHeight-2);
-    context.fillRect(context.width-scoreWindowWidth+nextTetro.block4.x*tileWidth+1-scoreWindowWidth/2, nextTetro.block4.y*tileHeight+0.48*scoreWindowWidth, tileWidth-2, tileHeight-2);
-    
+    context.fillRect(context.width - scoreWindowWidth + nextTetro.block1.x * tileWidth + 1 - scoreWindowWidth / 2, nextTetro.block1.y * tileHeight + 0.48 * scoreWindowWidth, tileWidth - 2, tileHeight - 2);
+    context.fillRect(context.width - scoreWindowWidth + nextTetro.block2.x * tileWidth + 1 - scoreWindowWidth / 2, nextTetro.block2.y * tileHeight + 0.48 * scoreWindowWidth, tileWidth - 2, tileHeight - 2);
+    context.fillRect(context.width - scoreWindowWidth + nextTetro.block3.x * tileWidth + 1 - scoreWindowWidth / 2, nextTetro.block3.y * tileHeight + 0.48 * scoreWindowWidth, tileWidth - 2, tileHeight - 2);
+    context.fillRect(context.width - scoreWindowWidth + nextTetro.block4.x * tileWidth + 1 - scoreWindowWidth / 2, nextTetro.block4.y * tileHeight + 0.48 * scoreWindowWidth, tileWidth - 2, tileHeight - 2);
+
 }
 
 /**
@@ -381,21 +502,21 @@ printStuff = function printStuff() {
  * @param {number} color Couleur du tetromino
  * @returns {String} Couleur en héxadécimale
  */
-color = function color(color){
-    switch (color){
-        case 1 :
+color = function color(color) {
+    switch (color) {
+        case 1:
             return "#EDE";
-        case 2 :
+        case 2:
             return "#FF0";
-        case 3 :
+        case 3:
             return "#F0F";
-        case 4 :
+        case 4:
             return "#0FF";
-        case 5 :
+        case 5:
             return "#F00";
-        case 6 :
+        case 6:
             return "#0F0";
-        case 7 :
+        case 7:
             return "#00F";
     }
 }
@@ -405,8 +526,8 @@ color = function color(color){
 /**
  * Fonction renvoyant l'intervalle de temps (en ms) entre deux descentes d'un tetromino
  */
-fallTime = function(){
-    return 1000-95*game.level;
+fallTime = function () {
+    return 1000 - 95 * game.level;
 }
 
 /**
@@ -414,60 +535,60 @@ fallTime = function(){
  * @param {number} d date 
  */
 update = function update(d) {
-    if(d-lastTimeUpdate > fallTime() || (downKeyDown && d-lastTimeUpdate > 130)){
+    if (d - lastTimeUpdate > fallTime() || (downKeyDown && d - lastTimeUpdate > 130)) {
         tetromino.fall();
-        if (downKeyDown){
+        if (downKeyDown) {
             game.score++;
         }
-        if(!tetromino.check()){
+        if (!tetromino.check()) {
             tetromino.upShift();
             printInGrid();
             lines = completedLines(grid);
-            if(lines.length !=0){
-                deleteLines(lines,grid);
+            if (lines.length != 0) {
+                deleteLines(lines, grid);
                 game.updateGame(lines);
             }
             tetromino = spawnTetromino();
-            nextColor = Math.ceil(Math.random()*7);
+            nextColor = Math.ceil(Math.random() * 7);
             nextTetro = spawnTetromino();
         }
         lastTimeUpdate = d;
     }
-    if(rightKeyDown && d-lastMoveTime > 130){
+    if (rightKeyDown && d - lastMoveTime > 130) {
         tetromino.rightShift();
-        if(!tetromino.check()){
+        if (!tetromino.check()) {
             tetromino.leftShift();
         }
         lastMoveTime = d;
     }
-    if(leftKeyDown && d-lastMoveTime > 130){
+    if (leftKeyDown && d - lastMoveTime > 130) {
         tetromino.leftShift();
-        if(!tetromino.check()){
+        if (!tetromino.check()) {
             tetromino.rightShift();
         }
         lastMoveTime = d;
     }
-    if(upKeyDown && d-lastMoveTime > 130){
+    if (upKeyDown && d - lastMoveTime > 130) {
         tetromino = rotate(tetromino);
         lastMoveTime = d;
     }
-    
-    if (spaceKeyDown && d-lastTimeUpdate > 100){
-       while (tetromino.check()){
-           tetromino.fall();   
-           game.score++;
+
+    if (spaceKeyDown && d - lastTimeUpdate > 100) {
+        while (tetromino.check()) {
+            tetromino.fall();
+            game.score++;
         }
-        if(!tetromino.check()){
+        if (!tetromino.check()) {
             tetromino.upShift();
             printInGrid();
             game.score--;
             lines = completedLines(grid);
-            if(lines.length !=0){
-                deleteLines(lines,grid);
+            if (lines.length != 0) {
+                deleteLines(lines, grid);
                 game.updateGame(lines);
             }
             tetromino = spawnTetromino();
-            nextColor = Math.ceil(Math.random()*7);
+            nextColor = Math.ceil(Math.random() * 7);
             nextTetro = spawnTetromino();
         }
         lastTimeUpdate = d;
@@ -479,7 +600,7 @@ update = function update(d) {
 /**
  * enregistre dans la grille la position du tetromino
  */
-printInGrid = function printInGrid(){
+printInGrid = function printInGrid() {
     grid[tetromino.block1.x][tetromino.block1.y] = tetromino.color;
     grid[tetromino.block2.x][tetromino.block2.y] = tetromino.color;
     grid[tetromino.block3.x][tetromino.block3.y] = tetromino.color;
@@ -509,7 +630,7 @@ rotate = function (tetromino) {
                     res.block1.move(0, 1);
                     res.block2.move(1, 2);
                     res.block3.move(-1, 0);
-                    res.block4.move(-2,-1);
+                    res.block4.move(-2, -1);
                     res.nbRot++;
                     break;
                 case 2:
@@ -524,7 +645,7 @@ rotate = function (tetromino) {
                     res.block2.move(-1, -2);
                     res.block3.move(1, 0);
                     res.block4.move(2, 1);
-                    res.nbRot=0;
+                    res.nbRot = 0;
                     break;
             }
             break;
@@ -535,7 +656,7 @@ rotate = function (tetromino) {
                     res.block2.move(1, -1);
                     res.block3.move(2, 0);
                     res.block4.move(-1, 1);
-                    res.nbRot++;                  
+                    res.nbRot++;
                     break;
                 case 1:
                     res.block2.move(1, 1);
@@ -562,7 +683,7 @@ rotate = function (tetromino) {
                 case 0:
                     res.block2.move(-1, 1);
                     res.block3.move(0, 2);
-                    res.block4.move(1,-1);
+                    res.block4.move(1, -1);
                     res.nbRot++;
                     break;
                 case 1:
@@ -612,7 +733,7 @@ rotate = function (tetromino) {
                     res.nbRot = 0;
             }
             break;
-            
+
         case 6:
             switch (res.nbRot) {
                 case 0:
@@ -640,7 +761,7 @@ rotate = function (tetromino) {
                     res.nbRot = 0;
             }
             break;
-            
+
         case 7:
             switch (res.nbRot) {
                 case 0:
@@ -672,35 +793,35 @@ rotate = function (tetromino) {
         return res;
     } else {
         res.leftShift();
-        if(res.check()){
+        if (res.check()) {
             return res;
-        }else{
-            if(res.color==1){
+        } else {
+            if (res.color == 1) {
                 res.leftShift();
-                if(res.check()){
+                if (res.check()) {
                     return res;
-                }else{
+                } else {
                     res.rightShift();
                 }
             }
             res.rightShift();
             res.rightShift();
-            if(res.check()){
+            if (res.check()) {
                 return res;
-            }else{
-                if(res.color==1){
+            } else {
+                if (res.color == 1) {
                     res.rightShift();
-                    if(res.check()){
+                    if (res.check()) {
                         return res;
-                    }else{
+                    } else {
                         res.leftShift();
                     }
                 }
                 res.leftShift();
                 res.upShift();
-                if(res.check()){
+                if (res.check()) {
                     return res;
-                }else{
+                } else {
                     return tetromino;
                 }
             }
@@ -714,20 +835,20 @@ rotate = function (tetromino) {
  * @param {int[][]} grid grille de jeu
  * @returns {int[]} tableau des cases complétées
  */
-completedLines = function(grid){
+completedLines = function (grid) {
     var isCompleted = true;
     var res = [];
     let j = 0;
-    for(var i = 0; i<20; i++){
+    for (var i = 0; i < 20; i++) {
         j = 0;
-        while (isCompleted && j<10){
-            if(grid [j][i] !=0){
+        while (isCompleted && j < 10) {
+            if (grid[j][i] != 0) {
                 j++;
-            }else{
+            } else {
                 isCompleted = false;
             }
         }
-        if(isCompleted){
+        if (isCompleted) {
             res.push(i);
         }
         isCompleted = true;
@@ -740,66 +861,66 @@ completedLines = function(grid){
  * @param {number} y ordonnée de la ligne supprimée
  * @param {number[][]} grid grille de jeu
  */
- lineFall = function(y, grid){
-    for (var i = 0; i < 10; i++){
-        grid [i][y] = grid [i][y-1];
-        grid [i][y-1] = 0;
+lineFall = function (y, grid) {
+    for (var i = 0; i < 10; i++) {
+        grid[i][y] = grid[i][y - 1];
+        grid[i][y - 1] = 0;
     }
- }
+}
 
 /**
  * Action de suppression des lignes complétées
  * @param {number[]} lines indices des lignes à supprimer
  * @param {number[][]} grid grille de jeu
  */
-deleteLines = function(lines, grid){
+deleteLines = function (lines, grid) {
     let y;
-    for (let i=0; i<lines.length; i++){
+    for (let i = 0; i < lines.length; i++) {
         y = lines[i];
-        for (let x=0; x<=9; x++){
+        for (let x = 0; x <= 9; x++) {
             grid[x][y] = 0;
         }
-        for (let k=y; k>0; k--){
-            lineFall(k,grid);
+        for (let k = y; k > 0; k--) {
+            lineFall(k, grid);
         }
     }
 }
 
-appuiClavier = function appuiClavier(event){
-    switch (event.keyCode){
-        case 38 :
+appuiClavier = function appuiClavier(event) {
+    switch (event.keyCode) {
+        case 38:
             upKeyDown = true;
             break;
-        case 40 :
+        case 40:
             downKeyDown = true;
             break;
-        case 37 :
+        case 37:
             leftKeyDown = true;
             break;
-        case 39 :
+        case 39:
             rightKeyDown = true;
             break;
-        case 32 :
+        case 32:
             spaceKeyDown = true;
             break;
     }
 }
 
-relacheClavier = function relacheClavier(event){
-    switch (event.keyCode){
-        case 38 :
+relacheClavier = function relacheClavier(event) {
+    switch (event.keyCode) {
+        case 38:
             upKeyDown = false;
             break;
-        case 40 :
+        case 40:
             downKeyDown = false;
             break;
-        case 37 :
+        case 37:
             leftKeyDown = false;
             break;
-        case 39 :
+        case 39:
             rightKeyDown = false;
             break;
-        case 32 :
+        case 32:
             spaceKeyDown = false;
             break;
     }
@@ -808,7 +929,7 @@ relacheClavier = function relacheClavier(event){
 /**
  * Action qui remet a faux l'état d'appui de toutes les touches directionnelles
  */
-resetKeyDown = function resetKeyDown(){
+resetKeyDown = function resetKeyDown() {
     upKeyDown = false;
     downKeyDown = false;
     leftKeyDown = false;
@@ -816,61 +937,13 @@ resetKeyDown = function resetKeyDown(){
     spaceKeyDown = false;
 }
 
-/**
- * Constructeur du type game
- * @param {number} START_LEVEL level initial au début de la partie
- */
-var game = function (START_LEVEL) {
-    this.level = START_LEVEL;
-    this.score = 0;
-    this.lines = 10*START_LEVEL;
-    var self = this;
-    
 
-    /**
-     * mise à jour du score, du nombre de lignes complétées et du level
-     * @param {number []} completedLines lignes qui ont été complétées après un coup
-     */
-    this.updateGame = function (completedLines){
-        //on gère comment si le nombre de lignes est de 0?
 
-        switch (completedLines.length){
-            case 1 :
-                self.score += 40*(self.level+1);
-                self.lines++;
-            break;
-            case 2 :
-                self.score += 100*(self.level+1);
-                self.lines += 2;
-            break;
-            case 3 :
-                self.score += 300*(self.level+1);
-                self.lines += 3;
-            break;
-            case 4 :
-                self.score += 300*(self.level+1);
-                self.lines += 4;
-        }
-
-        if (self.level <9 ){
-            self.level = Math.floor(self.lines/10);
-        }
-    }
-
-    /**
-     * Mise a jour du nombre de lignes à afficher 
-     */
-    this.displayLines = function (){
-        return self.lines-(10*START_LEVEL);
-    }
-
-    /**
-     * Réinitialisation des variables 
-     */
-    this.resetGame = function (){
-        self.level = START_LEVEL;
-        self.lines = 0;
-        self.score = 0;
+captureClicSouris = function (event) {
+    // calcul des coordonnées de la souris dans le canvas
+    if (event.target.id == "cvs") {
+        clic.x = event.pageX - event.target.offsetLeft;
+        clic.y = event.pageY - event.target.offsetTop;
     }
 }
 
@@ -879,7 +952,7 @@ var game = function (START_LEVEL) {
  * @param {Tetromino} newTetromino prochain tetromino à jouer
  * @returns {boolean} vrai si la partie est finie
  */
-gameOver = function (newTetromino){
+gameOver = function (newTetromino) {
     return !newTetromino.check();
 }
 
@@ -893,7 +966,7 @@ function initAudioPlayer(){
     audio = new Audio();
     audio.src = "cytus-the-blocks-we-lovedampg.mp3";
     audio.loop = true;
-    audio.play();   
+    audio.play();
     //initialisation des variables
     playbtn = document.getElementById("playpausebtn");
     mutebtn = document.getElementById("mutebtn");
@@ -929,7 +1002,7 @@ function initAudioPlayer(){
     playbtn.addEventListener("click",playPause);
     mutebtn.addEventListener("click",mute);
     volumeslider.addEventListener("mousemove",setvolume);
-    
+
 }
 
 window.addEventListener("load", initAudioPlayer);
