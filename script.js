@@ -47,8 +47,8 @@ var tileWidth;
 //Hauteur d'une case de la grille :
 var tileHeight;
 
-//Largeur de la fenêtre des scores
-var scoreWindowWidth;
+//Hauteur de la fenêtre des scores
+var scoreWindowWidth = 100;
 
 //variable utilisée pour mesurer le temps écoulé entre deux récursions :
 var lastTimeUpdate = Date.now();
@@ -526,8 +526,8 @@ color = function color(color) {
 /**
  * Fonction renvoyant l'intervalle de temps (en ms) entre deux descentes d'un tetromino
  */
-fallTime = function () {
-    return 1000 - 95 * game.level;
+fallTime = function(){
+    return Math.exp(-0.16*game.level)*1000;
 }
 
 /**
@@ -535,7 +535,7 @@ fallTime = function () {
  * @param {number} d date 
  */
 update = function update(d) {
-    if (d - lastTimeUpdate > fallTime() || (downKeyDown && d - lastTimeUpdate > 130)) {
+    if(d-lastTimeUpdate > fallTime() || (downKeyDown && d-lastTimeUpdate > 150)){
         tetromino.fall();
         if (downKeyDown) {
             game.score++;
@@ -544,49 +544,51 @@ update = function update(d) {
             tetromino.upShift();
             printInGrid();
             lines = completedLines(grid);
-            if (lines.length != 0) {
-                deleteLines(lines, grid);
-                game.updateGame(lines);
+            if(lines.length !=0){
+                setTimeout(deleteLines,fallTime(), lines, grid); //deleteLines(lines,grid);
+                setTimeout(game.updateGame, fallTime(), lines); //game.updateGame(lines);
             }
+            resetKeyDown();
             tetromino = spawnTetromino();
             nextColor = Math.ceil(Math.random() * 7);
             nextTetro = spawnTetromino();
         }
         lastTimeUpdate = d;
     }
-    if (rightKeyDown && d - lastMoveTime > 130) {
+    if(rightKeyDown && d-lastMoveTime > 150){
         tetromino.rightShift();
         if (!tetromino.check()) {
             tetromino.leftShift();
         }
         lastMoveTime = d;
     }
-    if (leftKeyDown && d - lastMoveTime > 130) {
+    if(leftKeyDown && d-lastMoveTime > 150){
         tetromino.leftShift();
         if (!tetromino.check()) {
             tetromino.rightShift();
         }
         lastMoveTime = d;
     }
-    if (upKeyDown && d - lastMoveTime > 130) {
+    if(upKeyDown && d-lastMoveTime > 150){
         tetromino = rotate(tetromino);
         lastMoveTime = d;
     }
-
-    if (spaceKeyDown && d - lastTimeUpdate > 100) {
-        while (tetromino.check()) {
-            tetromino.fall();
-            game.score++;
+    
+    if (spaceKeyDown && d-lastTimeUpdate > 50){
+       while (tetromino.check()){
+           tetromino.fall();   
+           game.score++;
         }
         if (!tetromino.check()) {
             tetromino.upShift();
             printInGrid();
             game.score--;
             lines = completedLines(grid);
-            if (lines.length != 0) {
-                deleteLines(lines, grid);
-                game.updateGame(lines);
+            if(lines.length !=0){
+                    setTimeout(deleteLines,fallTime(), lines, grid); //deleteLines(lines,grid);
+                    setTimeout(game.updateGame, fallTime(), lines); //game.updateGame(lines);
             }
+            resetKeyDown();
             tetromino = spawnTetromino();
             nextColor = Math.ceil(Math.random() * 7);
             nextTetro = spawnTetromino();
@@ -877,7 +879,7 @@ deleteLines = function (lines, grid) {
     let y;
     for (let i = 0; i < lines.length; i++) {
         y = lines[i];
-        for (let x = 0; x <= 9; x++) {
+        for (let x=0; x<10; x++){
             grid[x][y] = 0;
         }
         for (let k = y; k > 0; k--) {
@@ -958,13 +960,11 @@ gameOver = function (newTetromino) {
 
 
 /////////////Partie audio/////////////
-
-/*
 var audio, playbtn, mutebtn, volumeslider;
 
 function initAudioPlayer(){
     audio = new Audio();
-    audio.src = "cytus-the-blocks-we-lovedampg.mp3";
+    audio.src = "style/sound/cytus-the-blocks-we-lovedampg.mp3";
     audio.loop = true;
     audio.play();
     //initialisation des variables
@@ -975,22 +975,22 @@ function initAudioPlayer(){
     playPause = function(){
         if(audio.paused){
             audio.play();
-            playbtn.style.background = "url(icons/pause.png) no-repeat";
+            playbtn.style.background = "url(style/icons/pause.png) no-repeat";
         }
         else{
             audio.pause();
-            playbtn.style.background = "url(icons/play.png) no-repeat";
+            playbtn.style.background = "url(style/icons/play.png) no-repeat";
         }
     }
     ///
     mute = function(){
         if(audio.muted){
             audio.muted = false;
-            mutebtn.style.background = "url(icons/speaker.png) no-repeat";
+            mutebtn.style.background = "url(style/icons/speaker.png) no-repeat";
         }
         else{
             audio.muted = true;
-            mutebtn.style.background = "url(icons/speaker_muted.png) no-repeat";
+            mutebtn.style.background = "url(style/icons/speaker_muted.png) no-repeat";
         }
     }
     ///
@@ -1006,4 +1006,3 @@ function initAudioPlayer(){
 }
 
 window.addEventListener("load", initAudioPlayer);
-*/
