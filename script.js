@@ -32,7 +32,7 @@ resetGrid = function resetGrid(grid){
 }
 
 //Level initial 
-var START_LEVEL = 9;
+var START_LEVEL = 1;
 
 //Level maximal 
 const LEVEL_MAX = 9;
@@ -405,6 +405,7 @@ color = function color(color){
  * Fonction renvoyant l'intervalle de temps (en ms) entre deux descentes d'un tetromino
  */
 fallTime = function(){
+    return Math.exp(-0.16*game.level)*1000;
     return (-1000*game.level + 14000)/19;
 }
 
@@ -423,8 +424,8 @@ update = function update(d) {
             printInGrid();
             lines = completedLines(grid);
             if(lines.length !=0){
-                deleteLines(lines,grid);
-                game.updateGame(lines);
+                setTimeout(deleteLines, Math.exp(-0.16*game.level)*1000, lines, grid); //deleteLines(lines,grid);
+                setTimeout(game.updateGame, Math.exp(-0.16*game.level)*1000, lines); //game.updateGame(lines);
             }
             resetKeyDown();
             tetromino = spawnTetromino();
@@ -463,8 +464,8 @@ update = function update(d) {
             game.score--;
             lines = completedLines(grid);
             if(lines.length !=0){
-                deleteLines(lines,grid);
-                game.updateGame(lines);
+                    setTimeout(deleteLines, Math.exp(-0.16*game.level)*1000, lines, grid); //deleteLines(lines,grid);
+                    setTimeout(game.updateGame, Math.exp(-0.16*game.level)*1000, lines); //game.updateGame(lines);
             }
             resetKeyDown();
             tetromino = spawnTetromino();
@@ -853,9 +854,10 @@ var game = function (START_LEVEL) {
                 self.lines += 4;
         }
 
-        if (self.level <9 ){
+        /*if (self.level <LEVEL_MAX ){
             self.level = Math.floor(self.lines/10);
-        }
+        }*/
+        self.level = Math.floor(self.lines/10);
     }
 
     /**
@@ -890,7 +892,7 @@ var audio, playbtn, mutebtn, volumeslider;
 
 function initAudioPlayer(){
     audio = new Audio();
-    audio.src = "cytus-the-blocks-we-lovedampg.mp3";
+    audio.src = "style/sound/cytus-the-blocks-we-lovedampg.mp3";
     audio.loop = true;
     audio.play();   
     //initialisation des variables
@@ -901,22 +903,22 @@ function initAudioPlayer(){
     playPause = function(){
         if(audio.paused){
             audio.play();
-            playbtn.style.background = "url(icons/pause.png) no-repeat";
+            playbtn.style.background = "url(style/icons/pause.png) no-repeat";
         }
         else{
             audio.pause();
-            playbtn.style.background = "url(icons/play.png) no-repeat";
+            playbtn.style.background = "url(style/icons/play.png) no-repeat";
         }
     }
     ///
     mute = function(){
         if(audio.muted){
             audio.muted = false;
-            mutebtn.style.background = "url(icons/speaker.png) no-repeat";
+            mutebtn.style.background = "url(style/icons/speaker.png) no-repeat";
         }
         else{
             audio.muted = true;
-            mutebtn.style.background = "url(icons/speaker_muted.png) no-repeat";
+            mutebtn.style.background = "url(style/icons/speaker_muted.png) no-repeat";
         }
     }
     ///
