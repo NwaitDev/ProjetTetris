@@ -4,36 +4,13 @@ var context = null;
  * déclaration des variables
  */
 
-//Tetromino en cours d'utilisation :
-var tetromino;
 
-//couleur du prochain tetromino :
-var nextColor = Math.ceil(Math.random() * 7);
-
-//prochain tetromino
-var nextTetro;
 
 //coordonées d'un clic
 var clic = { x: 0, y: 0 };
 
 
-//grille de jeu :
-var grid = new Array();
-for (let i = 0; i < 10; i++) {
-    grid[i] = new Array();
-    for (let j = 0; j < 20; j++) {
-        grid[i][j] = 0;
-    }
-}
 
-//réinitialise la grille 
-resetGrid = function resetGrid(grid) {
-    for (var i = 0; i < 10; i++) {
-        for (var j = 0; j < 20; j++) {
-            grid[i][j] = 0;
-        }
-    }
-}
 
 //Level maximal 
 const LEVEL_MAX = 9;
@@ -63,8 +40,6 @@ var leftKeyDown = false;
 var rightKeyDown = false;
 var spaceKeyDown = false;
 
-//ordonnée des lignes complétées :
-var lines = new Array();
 
 /**
  * Constructeur du type Block
@@ -102,7 +77,6 @@ var Tetromino = function Tetromino(block1, block2, block3, block4, color, nbRot)
     this.block4 = block4;
     this.color = color;
     this.nbRot = nbRot;
-
     var self = this;
 
     /**
@@ -110,6 +84,7 @@ var Tetromino = function Tetromino(block1, block2, block3, block4, color, nbRot)
      * @returns {boolean} true si le tetromino est dans la grille et non-superposé à un bloc
      */
     this.check = function () {
+        let grid = game.grid;
         let res = (grid[self.block1.x] !== undefined) &&
             (grid[self.block2.x] !== undefined) &&
             (grid[self.block3.x] !== undefined) &&
@@ -176,13 +151,273 @@ var Tetromino = function Tetromino(block1, block2, block3, block4, color, nbRot)
         self.block3.y -= 1;
         self.block4.y -= 1;
     }
+    /**
+     * retourne la version tournée d'un quart de tour du tetromino
+     */
+    this.rotate = function () {
+
+        let res = self.copy();
+        let same = self.copy();
+
+        switch (res.color) {
+            case 1:
+                switch (res.nbRot) {
+                    case 0:
+                        res.block1.move(1, 0);
+                        res.block2.move(2, -1);
+                        res.block3.move(0, 1);
+                        res.block4.move(-1, 2);
+                        res.nbRot++;
+                        break;
+                    case 1:
+                        res.block1.move(0, 1);
+                        res.block2.move(1, 2);
+                        res.block3.move(-1, 0);
+                        res.block4.move(-2, -1);
+                        res.nbRot++;
+                        break;
+                    case 2:
+                        res.block1.move(-1, 0);
+                        res.block2.move(-2, 1);
+                        res.block3.move(0, -1);
+                        res.block4.move(1, -2);
+                        res.nbRot++;
+                        break;
+                    case 3:
+                        res.block1.move(0, -1);
+                        res.block2.move(-1, -2);
+                        res.block3.move(1, 0);
+                        res.block4.move(2, 1);
+                        res.nbRot = 0;
+                        break;
+                }
+                break;
+
+            case 2:
+                switch (res.nbRot) {
+                    case 0:
+                        res.block2.move(1, -1);
+                        res.block3.move(2, 0);
+                        res.block4.move(-1, 1);
+                        res.nbRot++;
+                        break;
+                    case 1:
+                        res.block2.move(1, 1);
+                        res.block3.move(0, 2);
+                        res.block4.move(-1, -1);
+                        res.nbRot++;
+                        break;
+                    case 2:
+                        res.block2.move(-1, 1);
+                        res.block3.move(-2, 0);
+                        res.block4.move(1, -1);
+                        res.nbRot++;
+                        break;
+                    case 3:
+                        res.block2.move(-1, -1);
+                        res.block3.move(0, -2);
+                        res.block4.move(1, 1);
+                        res.nbRot = 0;
+                }
+                break;
+
+            case 3:
+                switch (res.nbRot) {
+                    case 0:
+                        res.block2.move(-1, 1);
+                        res.block3.move(0, 2);
+                        res.block4.move(1, -1);
+                        res.nbRot++;
+                        break;
+                    case 1:
+                        res.block2.move(-1, -1);
+                        res.block3.move(-2, 0);
+                        res.block4.move(1, 1);
+                        res.nbRot++;
+                        break;
+                    case 2:
+                        res.block2.move(1, -1);
+                        res.block3.move(0, -2);
+                        res.block4.move(-1, 1);
+                        res.nbRot++;
+                        break;
+                    case 3:
+                        res.block2.move(1, 1);
+                        res.block3.move(2, 0);
+                        res.block4.move(-1, -1);
+                        res.nbRot = 0;
+                }
+                break;
+
+            case 5:
+                switch (res.nbRot) {
+                    case 0:
+                        res.block2.move(1, -1);
+                        res.block3.move(1, 1);
+                        res.block4.move(0, 2);
+                        res.nbRot++;
+                        break;
+                    case 1:
+                        res.block2.move(1, 1);
+                        res.block3.move(-1, 1);
+                        res.block4.move(-2, 0);
+                        res.nbRot++;
+                        break;
+                    case 2:
+                        res.block2.move(-1, 1);
+                        res.block3.move(-1, -1);
+                        res.block4.move(0, -2);
+                        res.nbRot++;
+                        break;
+                    case 3:
+                        res.block2.move(-1, -1);
+                        res.block3.move(1, -1);
+                        res.block4.move(2, 0);
+                        res.nbRot = 0;
+                }
+                break;
+
+            case 6:
+                switch (res.nbRot) {
+                    case 0:
+                        res.block2.move(-1, 1);
+                        res.block3.move(1, 1);
+                        res.block4.move(1, -1);
+                        res.nbRot++;
+                        break;
+                    case 1:
+                        res.block2.move(-1, -1);
+                        res.block3.move(-1, 1);
+                        res.block4.move(1, 1);
+                        res.nbRot++;
+                        break;
+                    case 2:
+                        res.block2.move(1, -1);
+                        res.block3.move(-1, -1);
+                        res.block4.move(-1, 1);
+                        res.nbRot++;
+                        break;
+                    case 3:
+                        res.block2.move(1, 1);
+                        res.block3.move(1, -1);
+                        res.block4.move(-1, -1);
+                        res.nbRot = 0;
+                }
+                break;
+
+            case 7:
+                switch (res.nbRot) {
+                    case 0:
+                        res.block2.move(-1, 1);
+                        res.block3.move(1, 1);
+                        res.block4.move(2, 0);
+                        res.nbRot++;
+                        break;
+                    case 1:
+                        res.block2.move(-1, -1);
+                        res.block3.move(-1, 1);
+                        res.block4.move(0, 2);
+                        res.nbRot++;
+                        break;
+                    case 2:
+                        res.block2.move(1, -1);
+                        res.block3.move(-1, -1);
+                        res.block4.move(-2, 0);
+                        res.nbRot++;
+                        break;
+                    case 3:
+                        res.block2.move(1, 1);
+                        res.block3.move(1, -1);
+                        res.block4.move(0, -2);
+                        res.nbRot = 0;
+                }
+        }
+        if (res.check()) {
+            return res;
+        }else{
+            if(res.color !=1){
+                res.leftShift()
+                if(res.check()){
+                    return res;
+                }else{
+                    res.rightShift();
+                    res.rightShift();
+                    if(res.check()){
+                        return res;
+                    }else{
+                        res.leftShift();
+                        res.upShift();
+                        if(res.check()){
+                            return res;
+                        }else{
+                            res.fall();
+                            res.fall();
+                            if(res.check){
+                                return res;
+                            }else{
+                                return same;
+                            }
+                        }
+                    }
+                }
+            }else{
+                res.leftShift();
+                if(res.check()){
+                    return res;
+                }else{
+                    res.leftShift();
+                    if(res.check()){
+                        return res;
+                    }else{
+                        res.rightShift();
+                        res.rightShift();
+                        res.rightShift();
+                        if(res.check()){
+                            return res;
+                        }else{
+                            res.rightShift();
+                            if(res.check()){
+                                return res;
+                            }else{
+                                res.leftShift();
+                                res.leftShift();
+                                res.upShift();
+                                if(res.check()){
+                                    return res;
+                                }else{
+                                    res.upShift();
+                                    if(res.check()){
+                                        return res;
+                                    }else{
+                                        res.fall();
+                                        res.fall();
+                                        res.fall();
+                                        if(res.check()){
+                                            return res;
+                                        }else{
+                                            res.fall();
+                                            if(res.check()){
+                                                return res;
+                                            }else{
+                                                return same;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 /**
  * remplace le tetromino en cours de placement par un autre tetromino en haut de la grille
  * @returns {Tetromino} un nouveau tetromino en haut de la grille
  */
-spawnTetromino = function () {
+spawnTetromino = function (nextColor) {
     let tetromino;
     switch (nextColor) {
         case 1:
@@ -261,23 +496,96 @@ spawnTetromino = function () {
 /**
  * Constructeur du type game
  */
-var game = function () {
+var Game = function () {
+    var self = this;
     this.startGame = false;
     this.level = 0;
     this.startLevel = 0;
     this.score = 0;
     this.lines = 0;
-    var self = this;
+    this.completedLines = new Array();
+    this.nextColor = Math.ceil(Math.random() * 7);
+    //grille de jeu :
+    this.grid =[];
+    for (let i = 0; i < 10; i++) {
+        this.grid[i] = new Array();
+        for (let j = 0; j < 20; j++) {
+            this.grid[i][j] = 0;
+        }
+    }
+    //mise à jour de la couleur et retour de cette couleur;
+    this.updateColor = function () {
+        self.nextColor = Math.ceil(Math.random() * 7);
+        return self.nextColor;
+    }
+    //Tetromino en cours d'utilisation
+    this.tetromino = spawnTetromino(self.nextColor);
+    //prochain tetromino
+    this.nextTetro = spawnTetromino(self.updateColor());
 
+    //mise à jour du tetromino et du prochain tetromino
+    this.updateTetromino = function () {
+        self.tetromino = spawnTetromino(self.nextColor);
+        self.nextTetro = spawnTetromino(self.updateColor())
+    }
+
+    /**
+     * Fonction vérifiant si une ligne de la grille est complétée
+     * @returns {number[]} tableau des lignes complétées
+     */
+    this.completeLines = function () {
+        let isCompleted = true;
+        let res = [];
+        let j;
+        for (var i = 0; i < 20; i++) {
+            j = 0;
+            while (isCompleted && j < 10) {
+                if (self.grid[j][i] != 0) {
+                    j++;
+                } else {
+                    isCompleted = false;
+                }
+            }
+            if (isCompleted) {
+                res.push(i);
+            }
+            isCompleted = true;
+        }
+        self.completedLines = res;
+    }
+
+    /**
+     * Suppression des lignes complétées
+     */
+    this.deleteLines = function () {
+        let y;
+        for (let i = 0; i < self.completedLines.length; i++) {
+            y = self.completedLines[i];
+            for (let x = 0; x < 10; x++) {
+                self.grid[x][y] = 0;
+            }
+            for (let k = y; k > 0; k--) {
+                self.lineFall(k);
+            }
+        }
+    }
+
+    /**
+     * Descente d'une ligne de la grille de jeu après la suppression d'une ligne
+     * @param {number} y ordonnée de la ligne supprimée
+     */
+    this.lineFall = function (y) {
+        for (var i = 0; i < 10; i++) {
+            self.grid[i][y] = self.grid[i][y - 1];
+            self.grid[i][y - 1] = 0;
+        }
+    }
 
     /**
      * mise à jour du score, du nombre de lignes complétées et du level
-     * @param {number []} completedLines lignes qui ont été complétées après un coup
      */
-    this.updateGame = function (completedLines) {
-        //on gère comment si le nombre de lignes est de 0?
-
-        switch (completedLines.length) {
+    this.updateGame = function () {
+        switch (self.completedLines.length) {
             case 1:
                 self.score += 40 * (self.level + 1);
                 self.lines++;
@@ -294,27 +602,34 @@ var game = function () {
                 self.score += 300 * (self.level + 1);
                 self.lines += 4;
         }
-
-        if (self.level < 9) {
-            self.level = Math.floor(self.lines / 10);
-        }
+        self.level = Math.floor(self.lines / 10) + self.startLevel;
     }
 
     /**
-     * Mise a jour du nombre de lignes à afficher 
+     * enregistre dans la grille la position du tetromino
      */
-    this.displayLines = function () {
-        return self.lines - (10 * self.startLevel);
+    this.printInGrid = function printInGrid() {
+        let grid = self.grid;
+        let tetromino = game.tetromino;
+        grid[tetromino.block1.x][tetromino.block1.y] = tetromino.color;
+        grid[tetromino.block2.x][tetromino.block2.y] = tetromino.color;
+        grid[tetromino.block3.x][tetromino.block3.y] = tetromino.color;
+        grid[tetromino.block4.x][tetromino.block4.y] = tetromino.color;
     }
 
     /**
-     * Réinitialisation des variables 
+     * Fonction renvoyant l'intervalle de temps (en ms) entre deux descentes d'un tetromino
      */
-    this.resetGame = function () {
-        self.level = 0;
-        self.lines = 0;
-        self.score = 0;
-        self.startGame = false;
+    this.fallTime = function () {
+        return Math.exp(-0.16 * game.level) * 1000;
+    }
+
+    /**
+     * Fonction vérifiant la possibilité de continuer la partie
+     * @returns {boolean} vrai si la partie est finie
+     */
+    this.gameOver = function () {
+        return !self.tetromino.check();
     }
 }
 
@@ -331,19 +646,16 @@ init = function () {
     scoreWindowWidth = context.width / 3;
     tileWidth = (context.width - scoreWindowWidth) / 10;
     tileHeight = (context.height) / 20;
-    tetromino = spawnTetromino();
-    nextColor = Math.ceil(Math.random() * 7);
-    nextTetro = spawnTetromino();
-    game = new game();
+    game = new Game();
     runMenu();
 }
 
 runMenu = function runMenu() {
     printMenu();
     updateMenu();
-    if(!game.startGame){
+    if (!game.startGame) {
         requestAnimationFrame(runMenu);
-    }else{
+    } else {
         runGame();
     }
 }
@@ -364,17 +676,17 @@ printMenu = function () {
     context.fillText("Start !", context.width / 10, 5 * context.height / 6);
 }
 
-updateMenu = function(){
+updateMenu = function () {
     let leftBorder;
     let downBorder;
     let rightBorder;
     let upBorder;
-    for(let i = 0; i<10;i++){
+    for (let i = 0; i < 10; i++) {
         leftBorder = context.width / 30 + i * context.width / 10;
         downBorder = 2 * context.height / 3;
-        upBorder = downBorder -20;
+        upBorder = downBorder - 20;
         rightBorder = leftBorder + 10;
-        if(clic.x>=leftBorder && clic.x<=rightBorder && clic.y<=downBorder && clic.y>=upBorder){
+        if (clic.x >= leftBorder && clic.x <= rightBorder && clic.y <= downBorder && clic.y >= upBorder) {
             game.startLevel = i;
             game.level = i;
         }
@@ -382,9 +694,9 @@ updateMenu = function(){
     leftBorder = context.width / 10;
     rightBorder = leftBorder + 50;
     downBorder = 5 * context.height / 6;
-    upBorder = downBorder-20
-    
-    if(clic.x>=leftBorder && clic.x<=rightBorder && clic.y<=downBorder && clic.y>=upBorder){
+    upBorder = downBorder - 20
+
+    if (clic.x >= leftBorder && clic.x <= rightBorder && clic.y <= downBorder && clic.y >= upBorder) {
         game.startGame = true;
         clic.x = 0;
         clic.y = 0;
@@ -406,24 +718,12 @@ levelColor = function (i) {
 runGame = function runGame() {
     update(Date.now());
     printStuff();
-    if (!gameOver(tetromino)) {
+    if (!game.gameOver()) {
         requestAnimationFrame(runGame);
     } else { // faire affichage de la fenêtre gameOver (fonction tetroNul()) avec choix de continuer ou quitter le jeu
-        for (let i = 0; i < 10; i++) {
-            for (let j = 0; j < 20; j++) {
-                if (grid[i][j] == 0) {
-                    grid[i][j] = Math.ceil(Math.random() * 7);
-                }
-            }
-        }
-        printStuff();
         alert("GAME OVER");
         resetKeyDown();
-        resetGrid();
-        game.resetGame();
-        tetromino = spawnTetromino();
-        nextColor = Math.ceil(Math.random() * 7);
-        nextTetro = spawnTetromino();
+        game = new Game();
         runMenu();
     }
 }
@@ -447,6 +747,7 @@ printStuff = function printStuff() {
     }
 
     //affichage du tetromino
+    let tetromino = game.tetromino;
     context.fillStyle = "#FFF"
     context.fillRect(tetromino.block1.x * tileWidth, tetromino.block1.y * tileHeight, tileWidth, tileHeight);
     context.fillRect(tetromino.block2.x * tileWidth, tetromino.block2.y * tileHeight, tileWidth, tileHeight);
@@ -474,21 +775,22 @@ printStuff = function printStuff() {
     context.fillText("Score :", context.width - scoreWindowWidth * 0.85, context.height / 2 + scoreWindowWidth / 4 + 3);
     context.fillText(game.score, context.width - scoreWindowWidth * 0.85, context.height / 2 + scoreWindowWidth / 2 + 3);
     context.fillText("Lines :", context.width - scoreWindowWidth * 0.85, context.height / 2 + 3 * scoreWindowWidth / 4 + 3);
-    context.fillText(game.displayLines(), context.width - scoreWindowWidth * 0.85, context.height / 2 + scoreWindowWidth + 3);
+    context.fillText(game.lines, context.width - scoreWindowWidth * 0.85, context.height / 2 + scoreWindowWidth + 3);
     context.fillText("Level :", context.width - scoreWindowWidth * 0.85, context.height / 2 + 5 * scoreWindowWidth / 4 + 3);
     context.fillText(game.level, context.width - scoreWindowWidth * 0.85, context.height / 2 + 6 * scoreWindowWidth / 4 + 3);
 
     //affichage des blocs déjà placés
     for (let i = 0; i < 10; i++) {
         for (let j = 0; j < 20; j++) {
-            if (grid[i][j] != 0) {
-                context.fillStyle = color(grid[i][j]);
+            if (game.grid[i][j] != 0) {
+                context.fillStyle = color(game.grid[i][j]);
                 context.fillRect(i * tileWidth + 1, j * tileHeight + 1, tileWidth - 2, tileHeight - 2);
             }
         }
     }
 
     //affichage du prochain tetromino dans la fenêtre de prévisualisation
+    let nextTetro = game.nextTetro;
     context.fillStyle = color(nextTetro.color);
     context.fillRect(context.width - scoreWindowWidth + nextTetro.block1.x * tileWidth + 1 - scoreWindowWidth / 2, nextTetro.block1.y * tileHeight + 0.48 * scoreWindowWidth, tileWidth - 2, tileHeight - 2);
     context.fillRect(context.width - scoreWindowWidth + nextTetro.block2.x * tileWidth + 1 - scoreWindowWidth / 2, nextTetro.block2.y * tileHeight + 0.48 * scoreWindowWidth, tileWidth - 2, tileHeight - 2);
@@ -523,75 +825,67 @@ color = function color(color) {
 
 
 
-/**
- * Fonction renvoyant l'intervalle de temps (en ms) entre deux descentes d'un tetromino
- */
-fallTime = function(){
-    return Math.exp(-0.16*game.level)*1000;
-}
 
 /**
  * Fonction de mise à jour de l'état du jeu
  * @param {number} d date 
  */
 update = function update(d) {
-    if(d-lastTimeUpdate > fallTime() || (downKeyDown && d-lastTimeUpdate > 150)){
+    let fallTime = game.fallTime();
+    let tetromino = game.tetromino;
+    if (d - lastTimeUpdate > fallTime || (downKeyDown && d - lastTimeUpdate > 150)) {
         tetromino.fall();
         if (downKeyDown) {
             game.score++;
         }
         if (!tetromino.check()) {
             tetromino.upShift();
-            printInGrid();
-            lines = completedLines(grid);
-            if(lines.length !=0){
-                setTimeout(deleteLines,fallTime(), lines, grid); //deleteLines(lines,grid);
-                setTimeout(game.updateGame, fallTime(), lines); //game.updateGame(lines);
+            game.printInGrid();
+            game.completeLines();
+            if (game.completedLines.length != 0) {
+                setTimeout(game.deleteLines, fallTime); //deleteLines();
+                setTimeout(game.updateGame, fallTime); //game.updateGame();
             }
             resetKeyDown();
-            tetromino = spawnTetromino();
-            nextColor = Math.ceil(Math.random() * 7);
-            nextTetro = spawnTetromino();
+            game.updateTetromino();
         }
         lastTimeUpdate = d;
     }
-    if(rightKeyDown && d-lastMoveTime > 150){
+    if (rightKeyDown && d - lastMoveTime > 150) {
         tetromino.rightShift();
         if (!tetromino.check()) {
             tetromino.leftShift();
         }
         lastMoveTime = d;
     }
-    if(leftKeyDown && d-lastMoveTime > 150){
+    if (leftKeyDown && d - lastMoveTime > 150) {
         tetromino.leftShift();
         if (!tetromino.check()) {
             tetromino.rightShift();
         }
         lastMoveTime = d;
     }
-    if(upKeyDown && d-lastMoveTime > 150){
-        tetromino = rotate(tetromino);
+    if (upKeyDown && d - lastMoveTime > 150) {
+        game.tetromino = game.tetromino.rotate();
         lastMoveTime = d;
     }
-    
-    if (spaceKeyDown && d-lastTimeUpdate > 50){
-       while (tetromino.check()){
-           tetromino.fall();   
-           game.score++;
+
+    if (spaceKeyDown && d - lastTimeUpdate > 50) {
+        while (tetromino.check()) {
+            tetromino.fall();
+            game.score++;
         }
         if (!tetromino.check()) {
             tetromino.upShift();
-            printInGrid();
+            game.printInGrid();
             game.score--;
-            lines = completedLines(grid);
-            if(lines.length !=0){
-                    setTimeout(deleteLines,fallTime(), lines, grid); //deleteLines(lines,grid);
-                    setTimeout(game.updateGame, fallTime(), lines); //game.updateGame(lines);
+            game.completeLines();
+            if (game.completedLines.length != 0) {
+                setTimeout(game.deleteLines, fallTime); //deleteLines();
+                setTimeout(game.updateGame, fallTime); //game.updateGame();
             }
             resetKeyDown();
-            tetromino = spawnTetromino();
-            nextColor = Math.ceil(Math.random() * 7);
-            nextTetro = spawnTetromino();
+            game.updateTetromino();
         }
         lastTimeUpdate = d;
     }
@@ -599,294 +893,15 @@ update = function update(d) {
 
 
 
-/**
- * enregistre dans la grille la position du tetromino
- */
-printInGrid = function printInGrid() {
-    grid[tetromino.block1.x][tetromino.block1.y] = tetromino.color;
-    grid[tetromino.block2.x][tetromino.block2.y] = tetromino.color;
-    grid[tetromino.block3.x][tetromino.block3.y] = tetromino.color;
-    grid[tetromino.block4.x][tetromino.block4.y] = tetromino.color;
-}
 
-/**
- * retourne la version tournée d'un quart de tour du tetromino en paramètre
- * @param {Tetromino} tetromino
- * @returns {Tetromino} la version tournée d'un quart de tour de tetromino (si possible)
- */
-rotate = function (tetromino) {
 
-    let res = tetromino.copy();
 
-    switch (res.color) {
-        case 1:
-            switch (res.nbRot) {
-                case 0:
-                    res.block1.move(1, 0);
-                    res.block2.move(2, -1);
-                    res.block3.move(0, 1);
-                    res.block4.move(-1, 2);
-                    res.nbRot++;
-                    break;
-                case 1:
-                    res.block1.move(0, 1);
-                    res.block2.move(1, 2);
-                    res.block3.move(-1, 0);
-                    res.block4.move(-2, -1);
-                    res.nbRot++;
-                    break;
-                case 2:
-                    res.block1.move(-1, 0);
-                    res.block2.move(-2, 1);
-                    res.block3.move(0, -1);
-                    res.block4.move(1, -2);
-                    res.nbRot++;
-                    break;
-                case 3:
-                    res.block1.move(0, -1);
-                    res.block2.move(-1, -2);
-                    res.block3.move(1, 0);
-                    res.block4.move(2, 1);
-                    res.nbRot = 0;
-                    break;
-            }
-            break;
 
-        case 2:
-            switch (res.nbRot) {
-                case 0:
-                    res.block2.move(1, -1);
-                    res.block3.move(2, 0);
-                    res.block4.move(-1, 1);
-                    res.nbRot++;
-                    break;
-                case 1:
-                    res.block2.move(1, 1);
-                    res.block3.move(0, 2);
-                    res.block4.move(-1, -1);
-                    res.nbRot++;
-                    break;
-                case 2:
-                    res.block2.move(-1, 1);
-                    res.block3.move(-2, 0);
-                    res.block4.move(1, -1);
-                    res.nbRot++;
-                    break;
-                case 3:
-                    res.block2.move(-1, -1);
-                    res.block3.move(0, -2);
-                    res.block4.move(1, 1);
-                    res.nbRot = 0;
-            }
-            break;
 
-        case 3:
-            switch (res.nbRot) {
-                case 0:
-                    res.block2.move(-1, 1);
-                    res.block3.move(0, 2);
-                    res.block4.move(1, -1);
-                    res.nbRot++;
-                    break;
-                case 1:
-                    res.block2.move(-1, -1);
-                    res.block3.move(-2, 0);
-                    res.block4.move(1, 1);
-                    res.nbRot++;
-                    break;
-                case 2:
-                    res.block2.move(1, -1);
-                    res.block3.move(0, -2);
-                    res.block4.move(-1, 1);
-                    res.nbRot++;
-                    break;
-                case 3:
-                    res.block2.move(1, 1);
-                    res.block3.move(2, 0);
-                    res.block4.move(-1, -1);
-                    res.nbRot = 0;
-            }
-            break;
 
-        case 5:
-            switch (res.nbRot) {
-                case 0:
-                    res.block2.move(1, -1);
-                    res.block3.move(1, 1);
-                    res.block4.move(0, 2);
-                    res.nbRot++;
-                    break;
-                case 1:
-                    res.block2.move(1, 1);
-                    res.block3.move(-1, 1);
-                    res.block4.move(-2, 0);
-                    res.nbRot++;
-                    break;
-                case 2:
-                    res.block2.move(-1, 1);
-                    res.block3.move(-1, -1);
-                    res.block4.move(0, -2);
-                    res.nbRot++;
-                    break;
-                case 3:
-                    res.block2.move(-1, -1);
-                    res.block3.move(1, -1);
-                    res.block4.move(2, 0);
-                    res.nbRot = 0;
-            }
-            break;
 
-        case 6:
-            switch (res.nbRot) {
-                case 0:
-                    res.block2.move(-1, 1);
-                    res.block3.move(1, 1);
-                    res.block4.move(1, -1);
-                    res.nbRot++;
-                    break;
-                case 1:
-                    res.block2.move(-1, -1);
-                    res.block3.move(-1, 1);
-                    res.block4.move(1, 1);
-                    res.nbRot++;
-                    break;
-                case 2:
-                    res.block2.move(1, -1);
-                    res.block3.move(-1, -1);
-                    res.block4.move(-1, 1);
-                    res.nbRot++;
-                    break;
-                case 3:
-                    res.block2.move(1, 1);
-                    res.block3.move(1, -1);
-                    res.block4.move(-1, -1);
-                    res.nbRot = 0;
-            }
-            break;
 
-        case 7:
-            switch (res.nbRot) {
-                case 0:
-                    res.block2.move(-1, 1);
-                    res.block3.move(1, 1);
-                    res.block4.move(2, 0);
-                    res.nbRot++;
-                    break;
-                case 1:
-                    res.block2.move(-1, -1);
-                    res.block3.move(-1, 1);
-                    res.block4.move(0, 2);
-                    res.nbRot++;
-                    break;
-                case 2:
-                    res.block2.move(1, -1);
-                    res.block3.move(-1, -1);
-                    res.block4.move(-2, 0);
-                    res.nbRot++;
-                    break;
-                case 3:
-                    res.block2.move(1, 1);
-                    res.block3.move(1, -1);
-                    res.block4.move(0, -2);
-                    res.nbRot = 0;
-            }
-    }
-    if (res.check()) {
-        return res;
-    } else {
-        res.leftShift();
-        if (res.check()) {
-            return res;
-        } else {
-            if (res.color == 1) {
-                res.leftShift();
-                if (res.check()) {
-                    return res;
-                } else {
-                    res.rightShift();
-                }
-            }
-            res.rightShift();
-            res.rightShift();
-            if (res.check()) {
-                return res;
-            } else {
-                if (res.color == 1) {
-                    res.rightShift();
-                    if (res.check()) {
-                        return res;
-                    } else {
-                        res.leftShift();
-                    }
-                }
-                res.leftShift();
-                res.upShift();
-                if (res.check()) {
-                    return res;
-                } else {
-                    return tetromino;
-                }
-            }
-        }
-    }
-}
 
-/**
- * Fonction vérifiant si une ligne de la grille est complétée
- * @param {Tetromino} tetromino tetromino qui s'est fixé sur la grille
- * @param {int[][]} grid grille de jeu
- * @returns {int[]} tableau des cases complétées
- */
-completedLines = function (grid) {
-    var isCompleted = true;
-    var res = [];
-    let j = 0;
-    for (var i = 0; i < 20; i++) {
-        j = 0;
-        while (isCompleted && j < 10) {
-            if (grid[j][i] != 0) {
-                j++;
-            } else {
-                isCompleted = false;
-            }
-        }
-        if (isCompleted) {
-            res.push(i);
-        }
-        isCompleted = true;
-    }
-    return res;
-}
-
-/**
- * Action de descente d'une ligne de la grille de jeu après la suppression d'une ligne
- * @param {number} y ordonnée de la ligne supprimée
- * @param {number[][]} grid grille de jeu
- */
-lineFall = function (y, grid) {
-    for (var i = 0; i < 10; i++) {
-        grid[i][y] = grid[i][y - 1];
-        grid[i][y - 1] = 0;
-    }
-}
-
-/**
- * Action de suppression des lignes complétées
- * @param {number[]} lines indices des lignes à supprimer
- * @param {number[][]} grid grille de jeu
- */
-deleteLines = function (lines, grid) {
-    let y;
-    for (let i = 0; i < lines.length; i++) {
-        y = lines[i];
-        for (let x=0; x<10; x++){
-            grid[x][y] = 0;
-        }
-        for (let k = y; k > 0; k--) {
-            lineFall(k, grid);
-        }
-    }
-}
 
 appuiClavier = function appuiClavier(event) {
     switch (event.keyCode) {
@@ -949,20 +964,13 @@ captureClicSouris = function (event) {
     }
 }
 
-/**
- * Fonction vérifiant la possibilité de continuer la partie
- * @param {Tetromino} newTetromino prochain tetromino à jouer
- * @returns {boolean} vrai si la partie est finie
- */
-gameOver = function (newTetromino) {
-    return !newTetromino.check();
-}
+
 
 
 /////////////Partie audio/////////////
 var audio, playbtn, mutebtn, volumeslider;
 
-function initAudioPlayer(){
+function initAudioPlayer() {
     audio = new Audio();
     audio.src = "style/sound/cytus-the-blocks-we-lovedampg.mp3";
     audio.loop = true;
@@ -972,36 +980,36 @@ function initAudioPlayer(){
     mutebtn = document.getElementById("mutebtn");
     volumeslider = document.getElementById("volumeslider");
     //Fonctions (play/mute)
-    playPause = function(){
-        if(audio.paused){
+    playPause = function () {
+        if (audio.paused) {
             audio.play();
             playbtn.style.background = "url(style/icons/pause.png) no-repeat";
         }
-        else{
+        else {
             audio.pause();
             playbtn.style.background = "url(style/icons/play.png) no-repeat";
         }
     }
     ///
-    mute = function(){
-        if(audio.muted){
+    mute = function () {
+        if (audio.muted) {
             audio.muted = false;
             mutebtn.style.background = "url(style/icons/speaker.png) no-repeat";
         }
-        else{
+        else {
             audio.muted = true;
             mutebtn.style.background = "url(style/icons/speaker_muted.png) no-repeat";
         }
     }
     ///
-    setvolume = function(){
+    setvolume = function () {
         audio.volume = volumeslider.value / 100;
     }
 
     //Ecouteur d'évènements
-    playbtn.addEventListener("click",playPause);
-    mutebtn.addEventListener("click",mute);
-    volumeslider.addEventListener("mousemove",setvolume);
+    playbtn.addEventListener("click", playPause);
+    mutebtn.addEventListener("click", mute);
+    volumeslider.addEventListener("mousemove", setvolume);
 
 }
 
