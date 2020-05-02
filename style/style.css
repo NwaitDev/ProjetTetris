@@ -68,17 +68,17 @@ input#volumeslider{
 }
 
 button{
-    border:none; 
+    border:none;
     cursor:pointer;
 }
 
-button#playpausebtn{
+#playpausebtn{
     background: url(icons/pause.png) no-repeat #000000;
     width: 25px;
     height: 25px;
 }
 
-button#mutebtn{
+#mutebtn{
     background: url(icons/speaker.png) no-repeat #000000;
     width: 25px;
     height: 25px;
