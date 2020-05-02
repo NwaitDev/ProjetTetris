@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="style/style.css"/>
+        <title>TETRIS : A CMI ADVENTURE</title>
+    </head>
+
+    <body onload="init()">
+        <h1> Tetris</h1>
+    
+        <div>
+            <canvas id="cvs" width=294 height=392></canvas> <!--300 400 -->
+        </div>	
+
+        
+        <div class = "audioContent">
+            <button id="playpausebtn"></button><button id="mutebtn"></button>
+            <input id="volumeslider" type ="range" min="0" max="100" value="100" step="1">
+        </div>
+
+        <!--<p class="Music">Music : <span class="musicTitle">"The blocks we loved"</span> <a href="https://soundcloud.com/killerblood" title="Aller-y cliquez ;)" target="_blank">Killerblood</a></p>-->
+        <script src="script.js" type="text/JavaScript"></script>
+        
+    </body>
+
+</html>
