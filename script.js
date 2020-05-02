@@ -9,12 +9,6 @@ var context = null;
 //coordonées d'un clic
 var clic = { x: 0, y: 0 };
 
-
-
-
-//Level maximal 
-const LEVEL_MAX = 9;
-
 //variable de jeu
 var game;
 
@@ -694,7 +688,7 @@ updateMenu = function () {
     leftBorder = context.width / 10;
     rightBorder = leftBorder + 50;
     downBorder = 5 * context.height / 6;
-    upBorder = downBorder - 20
+    upBorder = downBorder - 20;
 
     if (clic.x >= leftBorder && clic.x <= rightBorder && clic.y <= downBorder && clic.y >= upBorder) {
         game.startGame = true;
