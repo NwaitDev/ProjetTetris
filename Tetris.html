@@ -3,18 +3,23 @@
     <head>
         <meta charset="UTF-8">
         <link rel="stylesheet" href="files/style/Tetris_style.css"/>
+        <link rel="stylesheet" href="files/style/really-simple-jquery-dialog.css"/>
         <title>TETRIS : A CMI ADVENTURE</title>
     </head>
 
     <body onload="init()">
         <h1> Tetris</h1>
     
+        <div id="myAlert"></div>
+        <div id="myConfirm"></div>
+        <div id="myPrompt"></div>
+
         <div>
             <canvas id="cvs" width=300 height=400></canvas>
         </div>	
 
         <p>
-            Retrouvé 
+            Retrouvez 
             <a href="files/infos.html" title="Aller-y cliquez ;)" target="_blank">ici</a> 
             de nombreuses infos par rapport à ce jeu.
             <span class="button">
@@ -22,7 +27,8 @@
                 <input id="volumeslider" type="range" min="0" max="100" value="100" step="1">
             </span>
         </p>
-
+        <script src="files/jquery-3.5.0.js"></script>
+        <script src="files/really-simple-jquery-dialog.js"></script>
         <script src="files/script.js" type="text/JavaScript"></script>
         
     </body>

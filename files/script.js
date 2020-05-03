@@ -715,12 +715,48 @@ runGame = function runGame() {
     if (!game.gameOver()) {
         requestAnimationFrame(runGame);
     } else { // faire affichage de la fenêtre gameOver (fonction tetroNul()) avec choix de continuer ou quitter le jeu
-        alert("GAME OVER");
-        resetKeyDown();
-        game = new Game();
-        runMenu();
+        let alert = document.getElementById("myAlert");
+        let confirm = document.getElementById("myConfirm");
+       
+        
+        $(confirm).simpleConfirm({
+            message: "GAMEOVER! \n Souhaites-tu rejouer une partie ?",
+            success: function(){
+                $(confirm).simpleConfirm({
+                    message: "En es-tu certains ? Il y a pleins d'autres choses à faire pourtant...",
+                    success: function(){
+                        $(confirm).simpleConfirm({
+                            message: "#restonscheznous",
+                            success: function(){
+                                $(confirm).simpleConfirm({
+                                message: "Cliques sur \"No\" sinon on va jamais en finir xD",
+                                })
+                            },
+                            cancel: function(){
+                                resetKeyDown();
+                                game = new Game();
+                                runMenu(); 
+                            }
+                        })
+                    },
+                    cancel: function(){
+                        resetKeyDown();
+                        game = new Game();
+                        runMenu(); 
+                    }
+                })
+            },
+            cancel: function(){
+                resetKeyDown();
+                game = new Game();
+                runMenu(); 
+            }
+        })
+        
     }
 }
+
+
 
 /**
  * Affichage des éléments suivants : 
