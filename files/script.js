@@ -729,7 +729,7 @@ runGame = function runGame() {
                             message: "#restonscheznous",
                             success: function(){
                                 $(confirm).simpleConfirm({
-                                message: "Cliques sur \"No\" sinon on va jamais en finir xD",
+                                message: "Clique sur \"No\" sinon on va jamais en finir xD",
                                 })
                             },
                             cancel: function(){
@@ -1002,7 +1002,7 @@ var audio, playbtn, mutebtn, volumeslider;
 
 function initAudioPlayer() {
     audio = new Audio();
-    audio.src = "style/sound/cytus-the-blocks-we-lovedampg.mp3";
+    audio.src = "files/style/sound/cytus-the-blocks-we-lovedampg.mp3";
     audio.loop = true;
     audio.play();
     //initialisation des variables
@@ -1013,22 +1013,22 @@ function initAudioPlayer() {
     playPause = function () {
         if (audio.paused) {
             audio.play();
-            playbtn.style.background = "url(style/icons/pause.png) no-repeat";
+            playbtn.style.background = "url(files/style/icons/pause.png) no-repeat";
         }
         else {
             audio.pause();
-            playbtn.style.background = "url(style/icons/play.png) no-repeat";
+            playbtn.style.background = "url(files/style/icons/play.png) no-repeat";
         }
     }
     ///
     mute = function () {
         if (audio.muted) {
             audio.muted = false;
-            mutebtn.style.background = "url(style/icons/speaker.png) no-repeat";
+            mutebtn.style.background = "url(files/style/icons/speaker.png) no-repeat";
         }
         else {
             audio.muted = true;
-            mutebtn.style.background = "url(style/icons/speaker_muted.png) no-repeat";
+            mutebtn.style.background = "url(files/style/icons/speaker_muted.png) no-repeat";
         }
     }
     ///
