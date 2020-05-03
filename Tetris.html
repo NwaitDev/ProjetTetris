@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="files/style/Tetris_style.css"/>
+        <title>TETRIS : A CMI ADVENTURE</title>
+    </head>
+
+    <body onload="init()">
+        <h1> Tetris</h1>
+    
+        <div>
+            <canvas id="cvs" width=300 height=400></canvas>
+        </div>	
+
+        <p>
+            Retrouvé 
+            <a href="files/infos.html" title="Aller-y cliquez ;)" target="_blank">ici</a> 
+            de nombreuses infos par rapport à ce jeu.
+            <span class="button">
+                <button id="playpausebtn"></button><button id="mutebtn"></button> 
+                <input id="volumeslider" type="range" min="0" max="100" value="100" step="1">
+            </span>
+        </p>
+
+        <script src="files/script.js" type="text/JavaScript"></script>
+        
+    </body>
+
+</html>
