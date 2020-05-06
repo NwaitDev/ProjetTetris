@@ -1,6 +1,6 @@
-/*body {
+body {
     background: url("background.jpg");
-}*/
+}
 
 @font-face{
     font-family: 'titleFont';
@@ -13,7 +13,7 @@ h1 {
     font-size: 3.1em;
     color: #FFFFFF;
     text-shadow: 5px 5px 5px #000000;
-    /*text-indent: 2.2em;*/
+    text-align: center;
 }
 
 p{
@@ -22,31 +22,56 @@ p{
     /*color: #FFFFFF;*/
 }
 
-.Crédit{
+.sectionCredit{
     font-family: Verdana;
     font-size: 1em;
+    border: solid #FFFFFF 7px;
+    background-color: #1E1E1E;
+    color: #FFFFFF;
+    width: 50%;
+    text-align: left;
+    box-shadow: 7px 7px 7px #000000;
+    margin: auto;
+    
+}
+
+#credit{
+    text-align: center;
+    font-weight: bold;
+    text-decoration: underline;
 }
 
 .musicTitle{
     font-style: italic;
 }
 
+#remerciement{
+    margin-left: 1.5em;
+}
+
 a{
-    color: #000000;
+    color: #FFFFFF;
 }
 
 a:hover{
     text-decoration: dashed;
-    background-color: #000000;
-    color: #FFFFFF;
-    font-weight: bold;
+    background-color: #FFFFFF;
+    color: #000000;
+    /*font-weight: bold;*/
 }
 
-.Interview{
+#Interview{
     font-family: Georgia;
     /*font-weight: bold;*/
     font-size: 1em;
     text-indent: 3.2em;   
+    /* background-color: #1E1E1E;*/
+    width: 90%;
+    text-align: justify;
+    margin: auto;
+    margin-top: 4%;
+    padding: 2%;
+    
 }
 
 strong{
@@ -54,14 +79,40 @@ strong{
 }
 
 
-.Nathan{
-    color: #FF0000;
+#Nathan{
+    color: #FFFFFF;
+    background-color: #F000B0; 
+    width: 90%;
+    border: solid #FFFFFF 7px;
+    /*opacity: 0.9;*/
+    box-shadow: 7px 7px 7px #000000;
+    padding: 1em;
+    margin: auto;
+    margin-top: 10px ;
 }
 
-.Jérémy{
-    color: #00FF00;
+#Logan{
+    color: #000000;
+    background-color: #00F0F0;
+    width:90%;
+    border: solid #000000 7px;
+    box-shadow: 7px 7px 7px #000000;
+    /*opacity: 0.9;*/
+    padding: 1em;
+    margin: auto;
+    margin-top: 5%;
 }
 
-.Logan{
-    color: #0000FF;
+#Jérémy{
+    color: #000000;
+    background-color: #FCD21C;
+    width:90%;
+    border: solid #000000 7px;
+    box-shadow: 7px 7px 7px #000000;
+    /*opacity: 0.9;*/
+    padding: 1em;
+    margin: auto;
+    margin-top: 5%;
 }
+
+
