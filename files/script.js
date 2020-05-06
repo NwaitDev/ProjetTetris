@@ -714,7 +714,7 @@ runGame = function runGame() {
     printStuff();
     if (!game.gameOver()) {
         requestAnimationFrame(runGame);
-    } else { // faire affichage de la fenêtre gameOver (fonction tetroNul()) avec choix de continuer ou quitter le jeu
+    } else {
         let alert = document.getElementById("myAlert");
         let confirm = document.getElementById("myConfirm");
        
@@ -989,11 +989,10 @@ resetKeyDown = function resetKeyDown() {
 captureClicSouris = function (event) {
     // calcul des coordonnées de la souris dans le canvas
     if (event.target.id == "cvs") {
-        clic.x = event.pageX - event.target.offsetLeft;
-        clic.y = event.pageY - event.target.offsetTop;
+        clic.x = event.pageX - event.target.offsetLeft-7;
+        clic.y = event.pageY - event.target.offsetTop-15;
     }
 }
-
 
 
 
