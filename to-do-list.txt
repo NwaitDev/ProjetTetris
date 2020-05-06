@@ -1,9 +1,0 @@
-Amélioration possible :
-
-- Fonction printMenu()
-	- choix du level initial
-
-- mettre une tempo avant la suppression de lignes
-
-- Remplir la grille de bloc multicolor après un game Over
-
