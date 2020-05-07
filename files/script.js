@@ -1,37 +1,63 @@
 var context = null;
 
-/*
- * déclaration des variables
+
+
+/**
+ * Coordonées d'un clic dans le canva
  */
 
-
-
-//coordonées d'un clic
 var clic = { x: 0, y: 0 };
 
-//variable de jeu
+/**
+ * Variable contenant les informations et fonctions utliles au jeu
+ */
 var game;
 
-//Largeur d'une case de la grille :
+/** 
+ * Largeur d'une case de la grille
+ */
 var tileWidth;
 
-//Hauteur d'une case de la grille :
+/**
+ * Hauteur d'une case de la grille
+ */
 var tileHeight;
 
-//Hauteur de la fenêtre des scores
+/**
+ * Hauteur de la fenêtre des scores
+ */
 var scoreWindowWidth = 100;
-
-//variable utilisée pour mesurer le temps écoulé entre deux récursions :
+/**
+ * variable utilisée pour mesurer le temps écoulé entre deux récursions de la boucle de jeu
+ */
 var lastTimeUpdate = Date.now();
 
-//variable utilisée pour mesurer le temps écoulé entre deux déplacements :
+/**
+ * variable utilisée pour mesurer le temps écoulé entre deux déplacements de tetromino
+ */
 var lastMoveTime = Date.now();
 
-//état d'appui des flèches directionnelles
+//état d'appui des flèches directionnelles :
+
+/**
+ * état d'appui de la flèche du bas
+ */
 var downKeyDown = false;
+/**
+ * état d'appui de la flèche du haut
+ */
 var upKeyDown = false;
+/**
+ * état d'appui de la flèche gauche
+ */
 var leftKeyDown = false;
+/**
+ * état d'appui de la flèche droite
+ */
 var rightKeyDown = false;
+/**
+ * état d'appui de la barre espace
+ */
 var spaceKeyDown = false;
 
 
@@ -94,6 +120,7 @@ var Tetromino = function Tetromino(block1, block2, block3, block4, color, nbRot)
 
     /**
      * renvoie un nouvel objet de type Tetromino de mêmes propriétés que le tetromino
+     * @returns {Tetromino} copie du tetromino
      */
     this.copy = function () {
         return new Tetromino(
@@ -492,14 +519,39 @@ spawnTetromino = function (nextColor) {
  */
 var Game = function () {
     var self = this;
+
+    /**
+     * variable definissant si la partie a commencé 
+     */
     this.startGame = false;
+    /**
+     * niveau en cours
+     */
     this.level = 0;
+    /**
+     * niveau de départ
+     */
     this.startLevel = 0;
+    /**
+     * score de la partie en cours
+     */
     this.score = 0;
+    /**
+     * nombre de lignes complétées
+     */
     this.lines = 0;
+    /**
+     * tableau des lignes complétées lors de la pose d'un tetromino
+     */
     this.completedLines = new Array();
+    /**
+     * couleur du prochain tetromino
+     */
     this.nextColor = Math.ceil(Math.random() * 7);
-    //grille de jeu :
+    
+    /**
+     * grille de jeu
+     */
     this.grid =[];
     for (let i = 0; i < 10; i++) {
         this.grid[i] = new Array();
@@ -507,17 +559,29 @@ var Game = function () {
             this.grid[i][j] = 0;
         }
     }
-    //mise à jour de la couleur et retour de cette couleur;
+
+    /**
+     * fonction de mise à jour de la prochaine couleur
+     * @returns {number} valeur de la prochaine couleur
+     */
     this.updateColor = function () {
         self.nextColor = Math.ceil(Math.random() * 7);
         return self.nextColor;
     }
-    //Tetromino en cours d'utilisation
+    
+    /**
+     * tetromino en cours de placement
+     */
     this.tetromino = spawnTetromino(self.nextColor);
-    //prochain tetromino
+    
+    /**
+     * prochain tetromino (celui affiché dans la fenêtre de prévisualisation)
+     */
     this.nextTetro = spawnTetromino(self.updateColor());
 
-    //mise à jour du tetromino et du prochain tetromino
+    /**
+     * mise à jour du tetromino en cours de placement et du prochain tetromino
+     */
     this.updateTetromino = function () {
         self.tetromino = spawnTetromino(self.nextColor);
         self.nextTetro = spawnTetromino(self.updateColor())
@@ -613,6 +677,7 @@ var Game = function () {
 
     /**
      * Fonction renvoyant l'intervalle de temps (en ms) entre deux descentes d'un tetromino
+     * @returns {number} intervalle de temps
      */
     this.fallTime = function () {
         return Math.exp(-0.16 * game.level) * 1000;
@@ -628,6 +693,15 @@ var Game = function () {
 }
 
 /**
+ * fonction de lancement d'une nouvelle partie
+ */
+throwGame = function(){
+    resetKeyDown();
+    game = new Game();
+    runMenu(); 
+}
+
+/**
  * Fonction d'initialisation/lancement du jeu
  */
 init = function () {
@@ -640,10 +714,12 @@ init = function () {
     scoreWindowWidth = context.width / 3;
     tileWidth = (context.width - scoreWindowWidth) / 10;
     tileHeight = (context.height) / 20;
-    game = new Game();
-    runMenu();
+    throwGame();
 }
 
+/**
+ * boucle du menu
+ */
 runMenu = function runMenu() {
     printMenu();
     updateMenu();
@@ -654,6 +730,9 @@ runMenu = function runMenu() {
     }
 }
 
+/**
+ * affichage du menu
+ */
 printMenu = function () {
     context.fillStyle = "#000";
     context.fillRect(0, 0, context.width, context.height);
@@ -670,6 +749,9 @@ printMenu = function () {
     context.fillText("Start !", context.width / 10, 5 * context.height / 6);
 }
 
+/**
+ * mise à jour du menu
+ */
 updateMenu = function () {
     let leftBorder;
     let downBorder;
@@ -696,7 +778,10 @@ updateMenu = function () {
         clic.y = 0;
     }
 }
-
+/**
+ * fonction retournant la couleur pour afficher niveau dans le menu
+ * @returns {String} code hexadécimal de la couleur
+ */
 levelColor = function (i) {
     if (i == game.level) {
         return "#FFF";
@@ -706,21 +791,21 @@ levelColor = function (i) {
 }
 
 
-throwGame = function(){
-    resetKeyDown();
-    game = new Game();
-    runMenu(); 
-}
-
+/**
+ * fonction de lancement de la procédure de fin de partie
+ */
 tetronul = function (){
     let i = 0;
-    let alert = document.getElementById("myAlert");
     let confirm = document.getElementById("myConfirm");
-    successFunction(i,alert, confirm);
+    successFunction(i, confirm);
 }
 
-
-successFunction = function successFunction(i,alert,confirm){
+/**
+ * fonction d'affichage des différentes boîtes de dialogue à la fin de la partie et lancement d'une nouvelle partie
+ * @param {number} i nombre d'appel de la fonction
+ * @param {any} confirm J'ai pas bien compris à quoi ça sert mais si on le fait pas ça marche pas... alors je le fais.
+ */
+successFunction = function successFunction(i,confirm){
 
     let text = "";
     switch(i){
@@ -766,7 +851,7 @@ successFunction = function successFunction(i,alert,confirm){
         message: text,
         success: function(){
             if(i<20){
-                successFunction(i,alert, confirm);
+                successFunction(i, confirm);
             }else{
                 throwGame();
             }},
@@ -798,7 +883,7 @@ runGame = function runGame() {
 printStuff = function printStuff() {
     context.clearRect(0, 0, context.width, context.height);
 
-    //affichage de la grille
+    //affichage du quadrillage
     context.fillStyle = "#555";
     for (let i = 1; i < 10; i++) {
         context.fillRect(tileWidth * i - 1, 0, 2, context.height);
@@ -963,7 +1048,9 @@ update = function update(d) {
 
 
 
-
+/**
+ * mise à jour de l'état d'appui des boutons lors d'un appui
+ */
 appuiClavier = function appuiClavier(event) {
     switch (event.keyCode) {
         case 38:
@@ -983,7 +1070,9 @@ appuiClavier = function appuiClavier(event) {
             break;
     }
 }
-
+/**
+ * mise à jour de l'état d'appui des boutons lors du relâchement
+ */
 relacheClavier = function relacheClavier(event) {
     switch (event.keyCode) {
         case 38:
@@ -1015,12 +1104,13 @@ resetKeyDown = function resetKeyDown() {
     spaceKeyDown = false;
 }
 
-
-
+/**
+ * Mise à jour de la position d'un clic de souris
+ */
 captureClicSouris = function (event) {
     // calcul des coordonnées de la souris dans le canvas
     if (event.target.id == "cvs") {
-        clic.x = event.pageX - event.target.offsetLeft-7;
+        clic.x = event.pageX - event.target.offsetLeft-7; //oui... C'est du bidouillage j'avoue
         clic.y = event.pageY - event.target.offsetTop-15;
     }
 }
@@ -1030,6 +1120,9 @@ captureClicSouris = function (event) {
 /////////////Partie audio/////////////
 var audio, playbtn, mutebtn, volumeslider;
 
+/**
+ * fonction d'initialisation de la lecture de la musique
+ */
 function initAudioPlayer() {
     audio = new Audio();
     audio.src = "files/style/sound/cytus-the-blocks-we-lovedampg.mp3";
