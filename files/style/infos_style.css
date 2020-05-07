@@ -16,15 +16,8 @@ h1 {
     text-align: center;
 }
 
-
-p{
-    font-family: Verdana;
-    font-size: 1em;
-}
-
 .sectionCredit{
     font-family: Verdana;
-    font-size: 1em;
     text-align: left;
     color: #FFFFFF;
     background-color: #1E1E1E;
@@ -44,7 +37,7 @@ p{
     font-style: italic;
 }
 
-#remerciement{
+#remerciements{
     margin-left: 1.5em;
 }
 
@@ -54,13 +47,12 @@ a{
 
 a:hover{
     text-decoration: dashed;
-    color: #000000;
+    color: #1E1E1E;
     background-color: #FFFFFF;
 }
 
 #Interview{
     font-family: Verdana;
-    font-size: 1em;
     text-align: justify; 
     width: 90%;
     margin: auto;
@@ -75,6 +67,7 @@ a:hover{
 
 strong{
     font-weight: bold;
+    /*color: #FCD21C;*/
 }
 
 #Nathan{
@@ -90,7 +83,7 @@ strong{
 
 #Logan{
     color: #000000;
-    background-color: #00F0F0;
+    background-color:#007FDA;
     width:90%;
     border: solid #000000 7px;
     box-shadow: 7px 7px 7px #000000;

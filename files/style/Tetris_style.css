@@ -1,5 +1,5 @@
 body {
-    background: url("UFR-ST.png") no-repeat 94.5% 88.5% /*995px 435px*/,
+    background: url("UFR-ST.png") no-repeat 94.5% 88.5%,
                 url("background.jpg");
 }
 
@@ -13,7 +13,7 @@ h1 {
     font-weight: bold;
     font-size: 3.1em;
     color: #FFFFFF;
-    text-indent: 8% /*2.2em*/;
+    margin-left: 10%;
     text-shadow: 5px 5px 5px #000000;
 }
 
@@ -26,7 +26,6 @@ h1:active{
 }
 
 div{
-    width: 100%;
     text-align: center;
 }
 
@@ -41,9 +40,8 @@ div{
 p{
     font-family: Georgia;
     font-weight: bold;
-    font-size: 1em;
     color: #FFFFFF;
-    text-indent: 3.8%/*3.2em*/;
+    margin-left: 4%;
 }
 
 a{
@@ -51,19 +49,19 @@ a{
 }
 
 a:hover{
-    color: #FFFFFF;
     font-weight: bold;
+    color: #FFFFFF;
     text-decoration: dashed;
     background-color: #000000;   
 }
 
 .button{
-    margin-left: 4.8%/*44px*/;
+    margin-left: 4.8%;
 }
 
 #volumeslider{
     background-color: #000000;
-    width: 14.5%/*195px*/;
+    width: 15%;
 }
 
 button{
