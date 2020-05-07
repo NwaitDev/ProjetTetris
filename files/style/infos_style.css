@@ -65,9 +65,14 @@ a:hover{
     text-align: center;
 }
 
-strong{
+.strongBlack{
     font-weight: bold;
-    /*color: #FCD21C;*/
+    color: #000000;
+}
+
+.strongWhite{
+    font-weight: bold;
+    color: #FFFFFF;
 }
 
 #Nathan{
