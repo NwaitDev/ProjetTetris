@@ -706,6 +706,74 @@ levelColor = function (i) {
 }
 
 
+throwGame = function(){
+    resetKeyDown();
+    game = new Game();
+    runMenu(); 
+}
+
+tetronul = function (){
+    let i = 0;
+    let alert = document.getElementById("myAlert");
+    let confirm = document.getElementById("myConfirm");
+    successFunction(i,alert, confirm);
+}
+
+
+successFunction = function successFunction(i,alert,confirm){
+
+    let text = "";
+    switch(i){
+        case 0:
+            text = "GAMEOVER ! Score : "+game.score+" Rejouer ?";
+            i++;
+        break;
+        case 1:
+            text = "Tu penses vraiment pouvoir faire mieux que "+game.score+" ?";
+            i++;
+        break;
+        case 2:
+            text = "Pour de vrai ?";
+            i++;
+        break;
+        case 3:
+            text = "VRAIMENT ?";
+            i++;
+        break;
+        case 4 :
+            text = "Non parce que sinon tu peux faire autre chose... tu veux vraiment rejouer ?";
+            i++;
+        break;
+        case 5 :
+            text = "Perso, je t'ai vu jouer : c'est pas fantastique... tu veux VRAIMENT VRAIMENT VRAIMENT rejouer ?";
+            i++;
+        break;
+        case 6 : 
+            text = "Clique encore une fois sur \"Yes!\" et je t'empêche de jouer...";
+            i++;
+        break;
+        case 10 : 
+            text = "Tu sais que tu te fatigueras avant moi ?";
+            i++;
+        break;
+        case 20 :
+            text = "C'est bon, t'as gagné...";
+        default : 
+            text = "Clique sur \"No...\"";
+            i++;
+    }
+    $(confirm).simpleConfirm({
+        message: text,
+        success: function(){
+            if(i<20){
+                successFunction(i,alert, confirm);
+            }else{
+                throwGame();
+            }},
+        cancel: function(){throwGame()}
+    });
+}
+
 /**
  * Boucle de jeu
  */
@@ -715,44 +783,7 @@ runGame = function runGame() {
     if (!game.gameOver()) {
         requestAnimationFrame(runGame);
     } else {
-        let alert = document.getElementById("myAlert");
-        let confirm = document.getElementById("myConfirm");
-       
-        
-        $(confirm).simpleConfirm({
-            message: "GAMEOVER! \n Souhaites-tu rejouer une partie ?",
-            success: function(){
-                $(confirm).simpleConfirm({
-                    message: "En es-tu certains ? Il y a pleins d'autres choses à faire pourtant...",
-                    success: function(){
-                        $(confirm).simpleConfirm({
-                            message: "#restonscheznous",
-                            success: function(){
-                                $(confirm).simpleConfirm({
-                                message: "Clique sur \"No\" sinon on va jamais en finir xD",
-                                })
-                            },
-                            cancel: function(){
-                                resetKeyDown();
-                                game = new Game();
-                                runMenu(); 
-                            }
-                        })
-                    },
-                    cancel: function(){
-                        resetKeyDown();
-                        game = new Game();
-                        runMenu(); 
-                    }
-                })
-            },
-            cancel: function(){
-                resetKeyDown();
-                game = new Game();
-                runMenu(); 
-            }
-        })
-        
+        tetronul();
     }
 }
 
