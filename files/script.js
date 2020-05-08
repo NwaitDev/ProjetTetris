@@ -830,7 +830,7 @@ successFunction = function successFunction(i,confirm){
             i++;
         break;
         case 5 :
-            text = "Perso, je t'ai vu jouer : c'est pas fantastique... tu veux VRAIMENT VRAIMENT VRAIMENT rejouer ?";
+            text = "Perso, je t'ai vu jouer : c'était pas fou fou... tu veux vraiment VRAIMENT rejouer ?";
             i++;
         break;
         case 6 : 
@@ -838,7 +838,7 @@ successFunction = function successFunction(i,confirm){
             i++;
         break;
         case 10 : 
-            text = "Tu sais que tu te fatigueras avant moi ?";
+            text = "Tu sais que tu te fatigueras avant moi !";
             i++;
         break;
         case 20 :
