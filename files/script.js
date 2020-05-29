@@ -989,8 +989,8 @@ update = function update(d) {
             game.printInGrid();
             game.completeLines();
             if (game.completedLines.length != 0) {
-                setTimeout(game.deleteLines, fallTime); //deleteLines();
-                setTimeout(game.updateGame, fallTime); //game.updateGame();
+                setTimeout(game.deleteLines, fallTime / 2);
+                setTimeout(game.updateGame, fallTime / 2); 
             }
             resetKeyDown();
             game.updateTetromino();
@@ -1027,8 +1027,8 @@ update = function update(d) {
             game.score--;
             game.completeLines();
             if (game.completedLines.length != 0) {
-                setTimeout(game.deleteLines, fallTime); //deleteLines();
-                setTimeout(game.updateGame, fallTime); //game.updateGame();
+                setTimeout(game.deleteLines, fallTime / 2);
+                setTimeout(game.updateGame, fallTime / 2); 
             }
             resetKeyDown();
             game.updateTetromino();
